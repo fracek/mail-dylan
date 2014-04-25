@@ -1,0 +1,5 @@
+{
+  local _dll = [ FDLLName $(image) ] ;
+  LINKLIBS on $(_dll) += `libetpan-config --libs` ;
+  CCFLAGS += `libetpan-config --cflags` ;
+}
