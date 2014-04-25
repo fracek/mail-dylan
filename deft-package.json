@@ -1,0 +1,11 @@
+{
+  "name": "mail",
+  "description": "",
+  "keywords": [
+  ],
+  "license": "MIT",
+  "default-target": "mail",
+  "tests": [
+    "mail-test-suite-app"
+  ]
+}
