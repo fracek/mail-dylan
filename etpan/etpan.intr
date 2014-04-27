@@ -102,6 +102,14 @@ define interface
     "libetpan/mailprivacy_smime.h"
 
     },
-    equate: {
+    exclude: {
+      "carray_count",
+      "carray_data",
+      "carray_get",
+      "carray_set",
+      "chash_count",
+      "chash_key",
+      "chash_size",
+      "chash_value"
     }
 end interface;

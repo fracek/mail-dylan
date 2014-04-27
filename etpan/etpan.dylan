@@ -3314,32 +3314,6 @@ define C-function carray-delete-fast
   c-name: "carray_delete_fast";
 end;
 
-define C-function carray-data
-  input parameter array_ :: <carray*>;
-  result res :: <statically-typed-pointer*>;
-  c-name: "carray_data";
-end;
-
-define C-function carray-count
-  input parameter array_ :: <carray*>;
-  result res :: <C-unsigned-int>;
-  c-name: "carray_count";
-end;
-
-define C-function carray-get
-  input parameter array_ :: <carray*>;
-  input parameter indx_ :: <C-unsigned-int>;
-  result res :: <C-void*>;
-  c-name: "carray_get";
-end;
-
-define C-function carray-set
-  input parameter array_ :: <carray*>;
-  input parameter indx_ :: <C-unsigned-int>;
-  input parameter value_ :: <C-void*>;
-  c-name: "carray_set";
-end;
-
 define C-function carray-free
   input parameter array_ :: <carray*>;
   c-name: "carray_free";
@@ -3411,30 +3385,6 @@ define C-function chash-next
   c-name: "chash_next";
 end;
 
-define C-function chash-size
-  input parameter hash_ :: <chash*>;
-  result res :: <C-unsigned-int>;
-  c-name: "chash_size";
-end;
-
-define C-function chash-count
-  input parameter hash_ :: <chash*>;
-  result res :: <C-unsigned-int>;
-  c-name: "chash_count";
-end;
-
-define C-function chash-key
-  input parameter iter_ :: <chashiter*>;
-  input parameter result_ :: <chashdatum*>;
-  c-name: "chash_key";
-end;
-
-define C-function chash-value
-  input parameter iter_ :: <chashiter*>;
-  input parameter result_ :: <chashdatum*>;
-  c-name: "chash_value";
-end;
-
 define constant $CHASH-COPYNONE = 0;
 
 define constant $CHASH-COPYKEY = 1;
@@ -3473,10 +3423,10 @@ define C-function maillock-write-unlock
   c-name: "maillock_write_unlock";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00C5E4D0} "mbox-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00D361F8} "mbox-message-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00DC4540} "mbox-cached-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00EA9498} "mbox-cached-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00F3F188} "mbox-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00F8F578} "mbox-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x0095CBD0} "mbox-cached-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00A5B5B0} "mbox-cached-message-driver"*/
 define C-function mbox-mailstorage-init
   input parameter storage_ :: <mailstorage*>;
   input parameter mb-pathname_ :: <char*>;
@@ -3487,10 +3437,10 @@ define C-function mbox-mailstorage-init
   c-name: "mbox_mailstorage_init";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00B7A508} "mh-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00D89AF0} "mh-message-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00CA78F8} "mh-cached-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00E9A5E8} "mh-cached-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00BA7000} "mh-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00CB5230} "mh-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x01242038} "mh-cached-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00DECD20} "mh-cached-message-driver"*/
 define C-function mh-mailstorage-init
   input parameter storage_ :: <mailstorage*>;
   input parameter mh-pathname_ :: <char*>;
@@ -3501,10 +3451,10 @@ define C-function mh-mailstorage-init
   c-name: "mh_mailstorage_init";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00C5E000} "imap-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00D14D58} "imap-message-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00D15930} "imap-cached-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00D36508} "imap-cached-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x01160BD0} "imap-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x010989A0} "imap-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00DC27A8} "imap-cached-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00DCB3F0} "imap-cached-message-driver"*/
 define C-function imap-mailstorage-init
   input parameter storage_ :: <mailstorage*>;
   input parameter imap-servername_ :: <char*>;
@@ -3562,10 +3512,10 @@ define C-function imap-mailstorage-init-sasl-with-local-address
   c-name: "imap_mailstorage_init_sasl_with_local_address";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x008B5380} "pop3-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00A5C1C0} "pop3-message-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00B85A48} "pop3-cached-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00B86348} "pop3-cached-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x0102D968} "pop3-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00CE7738} "pop3-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00BBE540} "pop3-cached-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x010099D8} "pop3-cached-message-driver"*/
 define C-function pop3-mailstorage-init
   input parameter storage_ :: <mailstorage*>;
   input parameter pop3-servername_ :: <char*>;
@@ -3637,10 +3587,10 @@ define C-function hotmail-mailstorage-init
   c-name: "hotmail_mailstorage_init";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00D36E00} "nntp-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00D896C8} "nntp-message-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00DA3188} "nntp-cached-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00DC5F18} "nntp-cached-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00CB5C08} "nntp-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00CC75E8} "nntp-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00CE7070} "nntp-cached-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00D8C118} "nntp-cached-message-driver"*/
 define C-function nntp-mailstorage-init
   input parameter storage_ :: <mailstorage*>;
   input parameter nntp-servername_ :: <char*>;
@@ -3675,10 +3625,10 @@ define C-function nntp-mailstorage-init-with-local-address
   c-name: "nntp_mailstorage_init_with_local_address";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00B867E0} "maildir-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00C5ED58} "maildir-message-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00D14850} "maildir-cached-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00D36B60} "maildir-cached-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x01031E70} "maildir-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x01098038} "maildir-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x011035B0} "maildir-cached-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x011848C0} "maildir-cached-message-driver"*/
 define C-function maildir-mailstorage-init
   input parameter storage_ :: <mailstorage*>;
   input parameter md-pathname_ :: <char*>;
@@ -3689,8 +3639,8 @@ define C-function maildir-mailstorage-init
   c-name: "maildir_mailstorage_init";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00E81DC8} "db-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00E80508} "db-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00CE7188} "db-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00CE78C0} "db-message-driver"*/
 define C-function db-mailstorage-init
   input parameter storage_ :: <mailstorage*>;
   input parameter db-pathname_ :: <char*>;
@@ -3698,8 +3648,8 @@ define C-function db-mailstorage-init
   c-name: "db_mailstorage_init";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00DA17A8} "feed-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00CA79A0} "feed-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00EEB7E0} "feed-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00EEE428} "feed-message-driver"*/
 define C-function feed-mailstorage-init
   input parameter storage_ :: <mailstorage*>;
   input parameter feed-url_ :: <char*>;
@@ -3710,7 +3660,7 @@ define C-function feed-mailstorage-init
   c-name: "feed_mailstorage_init";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00D36428} "mime-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x010985B0} "mime-message-driver"*/
 define C-function mime-message-init
   input parameter mime_ :: <mailmime*>;
   result res :: <mailmessage*>;
@@ -3729,7 +3679,7 @@ define C-function mime-message-set-tmpdir
   c-name: "mime_message_set_tmpdir";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00DA38F8} "data-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x01103B98} "data-message-driver"*/
 define C-function data-message-init
   input parameter data_ :: <char*>;
   input parameter len_ :: <size-t>;
@@ -4126,7 +4076,7 @@ define C-function libetpan-engine-debug
   c-name: "libetpan_engine_debug";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00D9C690} "engine-app"*/
+ /* Ignoring declaration for {<variable-declaration> #x00DEC700} "engine-app"*/
 define C-function mailprivacy-gnupg-init
   input parameter privacy_ :: <mailprivacy*>;
   result res :: <C-signed-int>;
