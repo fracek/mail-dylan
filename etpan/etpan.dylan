@@ -39,7 +39,7 @@ define constant <mailstream-write> = <C-function-pointer>;
 define constant <mailstream-close> = <C-function-pointer>;
 define constant <mailstream-get-fd> = <C-function-pointer>;
 define constant <mailstream-free> = <C-function-pointer>;
-define constant <mailstream-cancel-ptr> = <C-function-pointer>;
+define constant <mailstream-cancel> = <C-function-pointer>;
 define C-struct <mailstream-cancel>
 end;
 
@@ -65,7 +65,7 @@ define C-struct <mailstream-low-driver>
   slot mailstream_low_driver$mailstream-close :: <mailstream-close>;
   slot mailstream_low_driver$mailstream-get-fd :: <mailstream-get-fd>;
   slot mailstream_low_driver$mailstream-free :: <mailstream-free>;
-  slot mailstream_low_driver$mailstream-cancel :: <mailstream-cancel-ptr>;
+  slot mailstream_low_driver$mailstream-cancel :: <mailstream-cancel>;
   slot mailstream_low_driver$mailstream-get-cancel :: <mailstream-get-cancel>;
   slot mailstream_low_driver$mailstream-get-certificate-chain :: <mailstream-get-certificate-chain>;
   slot mailstream_low_driver$mailstream-setup-idle :: <mailstream-setup-idle>;
@@ -74,6 +74,7 @@ define C-struct <mailstream-low-driver>
 end;
 
 define C-pointer-type <mailstream-low-driver*> => <mailstream-low-driver>;
+define constant <logger> = <C-function-pointer>;
 define C-struct <_mailstream-low>
   slot _mailstream_low$data :: <C-void*>;
   slot _mailstream_low$driver :: <mailstream-low-driver*>;
@@ -87,6 +88,7 @@ end;
 define constant <mailstream-low> = <_mailstream-low>;
 
 define C-pointer-type <mailstream-low*> => <mailstream-low>;
+define constant <logger> = <C-function-pointer>;
 define C-struct <_mailstream>
   slot _mailstream$buffer-max-size :: <C-unsigned-long>;
   slot _mailstream$write-buffer :: <char*>;
@@ -1080,6 +1082,7 @@ define C-function mail-build-thread
   c-name: "mail_build_thread";
 end;
 
+define constant <comp-func> = <C-function-pointer>;
 define C-function mail-thread-sort
   input parameter tree_ :: <mailmessage-tree*>;
   input parameter comp-func_ :: <comp-func>;
@@ -1342,6 +1345,1863 @@ define C-function mailsmtp-set-logger
   c-name: "mailsmtp_set_logger";
 end;
 
+define constant <uint16-t> = <C-unsigned-short>;
+
+define C-function mailsmtp-socket-connect
+  input parameter session_ :: <mailsmtp*>;
+  input parameter server_ :: <char*>;
+  input parameter port_ :: <uint16-t>;
+  result res :: <C-signed-int>;
+  c-name: "mailsmtp_socket_connect";
+end;
+
+define C-function mailsmtp-socket-starttls
+  input parameter session_ :: <mailsmtp*>;
+  result res :: <C-signed-int>;
+  c-name: "mailsmtp_socket_starttls";
+end;
+
+define C-struct <mailstream-ssl-context>
+end;
+
+define C-pointer-type <mailstream-ssl-context*> => <mailstream-ssl-context>;
+define constant <callback> = <C-function-pointer>;
+define C-function mailsmtp-socket-starttls-with-callback
+  input parameter session_ :: <mailsmtp*>;
+  input parameter callback_ :: <callback>;
+  input parameter data_ :: <C-void*>;
+  result res :: <C-signed-int>;
+  c-name: "mailsmtp_socket_starttls_with_callback";
+end;
+
+define C-function mailsmtp-ssl-connect
+  input parameter session_ :: <mailsmtp*>;
+  input parameter server_ :: <char*>;
+  input parameter port_ :: <uint16-t>;
+  result res :: <C-signed-int>;
+  c-name: "mailsmtp_ssl_connect";
+end;
+
+define constant <callback> = <C-function-pointer>;
+define C-function mailsmtp-ssl-connect-with-callback
+  input parameter session_ :: <mailsmtp*>;
+  input parameter server_ :: <char*>;
+  input parameter port_ :: <uint16-t>;
+  input parameter callback_ :: <callback>;
+  input parameter data_ :: <C-void*>;
+  result res :: <C-signed-int>;
+  c-name: "mailsmtp_ssl_connect_with_callback";
+end;
+
+define constant <char<@1024>> = <char*>;
+define C-struct <chashdatum>
+  slot chashdatum$data :: <C-void*>;
+  slot chashdatum$len :: <C-unsigned-int>;
+end;
+
+define C-struct <chashcell>
+  slot chashcell$func :: <C-unsigned-int>;
+  slot chashcell$key :: <chashdatum>;
+  slot chashcell$value :: <chashdatum>;
+  slot chashcell$next :: <chashcell*>;
+end;
+
+define C-pointer-type <chashcell*> => <chashcell>;
+define C-pointer-type <chashcell**> => <chashcell*>;
+define C-struct <chash>
+  slot chash$size :: <C-unsigned-int>;
+  slot chash$count :: <C-unsigned-int>;
+  slot chash$copyvalue :: <C-signed-int>;
+  slot chash$copykey :: <C-signed-int>;
+  slot chash$cells :: <chashcell**>;
+end;
+
+define C-pointer-type <chash*> => <chash>;
+define C-struct <mailmbox-folder>
+  array slot mailmbox_folder$mb-filename :: <C-signed-char>, length: 1024;
+  slot mailmbox_folder$mb-mtime :: <C-signed-long>;
+  slot mailmbox_folder$mb-fd :: <C-signed-int>;
+  slot mailmbox_folder$mb-read-only :: <C-signed-int>;
+  slot mailmbox_folder$mb-no-uid :: <C-signed-int>;
+  slot mailmbox_folder$mb-changed :: <C-signed-int>;
+  slot mailmbox_folder$mb-deleted-count :: <C-unsigned-int>;
+  slot mailmbox_folder$mb-mapping :: <char*>;
+  slot mailmbox_folder$mb-mapping-size :: <C-unsigned-long>;
+  slot mailmbox_folder$mb-written-uid :: <C-unsigned-int>;
+  slot mailmbox_folder$mb-max-uid :: <C-unsigned-int>;
+  slot mailmbox_folder$mb-hash :: <chash*>;
+  slot mailmbox_folder$mb-tab :: <carray*>;
+end;
+
+define C-pointer-type <mailmbox-folder*> => <mailmbox-folder>;
+define C-function mailmbox-append-message-list
+  input parameter folder_ :: <mailmbox-folder*>;
+  input parameter append-tab_ :: <carray*>;
+  result res :: <C-signed-int>;
+  c-name: "mailmbox_append_message_list";
+end;
+
+define C-function mailmbox-append-message
+  input parameter folder_ :: <mailmbox-folder*>;
+  input parameter data_ :: <char*>;
+  input parameter len_ :: <size-t>;
+  result res :: <C-signed-int>;
+  c-name: "mailmbox_append_message";
+end;
+
+define C-pointer-type <unsigned-int*> => <C-unsigned-int>;
+define C-function mailmbox-append-message-uid
+  input parameter folder_ :: <mailmbox-folder*>;
+  input parameter data_ :: <char*>;
+  input parameter len_ :: <size-t>;
+  input parameter puid_ :: <unsigned-int*>;
+  result res :: <C-signed-int>;
+  c-name: "mailmbox_append_message_uid";
+end;
+
+define C-function mailmbox-fetch-msg
+  input parameter folder_ :: <mailmbox-folder*>;
+  input parameter num_ :: <uint32-t>;
+  input parameter result_ :: <char**>;
+  input parameter result-len_ :: <size-t*>;
+  result res :: <C-signed-int>;
+  c-name: "mailmbox_fetch_msg";
+end;
+
+define C-function mailmbox-fetch-msg-headers
+  input parameter folder_ :: <mailmbox-folder*>;
+  input parameter num_ :: <uint32-t>;
+  input parameter result_ :: <char**>;
+  input parameter result-len_ :: <size-t*>;
+  result res :: <C-signed-int>;
+  c-name: "mailmbox_fetch_msg_headers";
+end;
+
+define C-function mailmbox-fetch-result-free
+  input parameter msg_ :: <char*>;
+  c-name: "mailmbox_fetch_result_free";
+end;
+
+define C-function mailmbox-copy-msg-list
+  input parameter dest-folder_ :: <mailmbox-folder*>;
+  input parameter src-folder_ :: <mailmbox-folder*>;
+  input parameter tab_ :: <carray*>;
+  result res :: <C-signed-int>;
+  c-name: "mailmbox_copy_msg_list";
+end;
+
+define C-function mailmbox-copy-msg
+  input parameter dest-folder_ :: <mailmbox-folder*>;
+  input parameter src-folder_ :: <mailmbox-folder*>;
+  input parameter uid_ :: <uint32-t>;
+  result res :: <C-signed-int>;
+  c-name: "mailmbox_copy_msg";
+end;
+
+define C-function mailmbox-expunge
+  input parameter folder_ :: <mailmbox-folder*>;
+  result res :: <C-signed-int>;
+  c-name: "mailmbox_expunge";
+end;
+
+define C-function mailmbox-delete-msg
+  input parameter folder_ :: <mailmbox-folder*>;
+  input parameter uid_ :: <uint32-t>;
+  result res :: <C-signed-int>;
+  c-name: "mailmbox_delete_msg";
+end;
+
+define C-pointer-type <mailmbox-folder**> => <mailmbox-folder*>;
+define C-function mailmbox-init
+  input parameter filename_ :: <char*>;
+  input parameter force-readonly_ :: <C-signed-int>;
+  input parameter force-no-uid_ :: <C-signed-int>;
+  input parameter default-written-uid_ :: <uint32-t>;
+  input parameter result-folder_ :: <mailmbox-folder**>;
+  result res :: <C-signed-int>;
+  c-name: "mailmbox_init";
+end;
+
+define C-function mailmbox-done
+  input parameter folder_ :: <mailmbox-folder*>;
+  c-name: "mailmbox_done";
+end;
+
+define C-function mailmbox-write-lock
+  input parameter folder_ :: <mailmbox-folder*>;
+  result res :: <C-signed-int>;
+  c-name: "mailmbox_write_lock";
+end;
+
+define C-function mailmbox-write-unlock
+  input parameter folder_ :: <mailmbox-folder*>;
+  result res :: <C-signed-int>;
+  c-name: "mailmbox_write_unlock";
+end;
+
+define C-function mailmbox-read-lock
+  input parameter folder_ :: <mailmbox-folder*>;
+  result res :: <C-signed-int>;
+  c-name: "mailmbox_read_lock";
+end;
+
+define C-function mailmbox-read-unlock
+  input parameter folder_ :: <mailmbox-folder*>;
+  result res :: <C-signed-int>;
+  c-name: "mailmbox_read_unlock";
+end;
+
+define C-function mailmbox-map
+  input parameter folder_ :: <mailmbox-folder*>;
+  result res :: <C-signed-int>;
+  c-name: "mailmbox_map";
+end;
+
+define C-function mailmbox-unmap
+  input parameter folder_ :: <mailmbox-folder*>;
+  c-name: "mailmbox_unmap";
+end;
+
+define C-function mailmbox-sync
+  input parameter folder_ :: <mailmbox-folder*>;
+  c-name: "mailmbox_sync";
+end;
+
+define C-function mailmbox-open
+  input parameter folder_ :: <mailmbox-folder*>;
+  result res :: <C-signed-int>;
+  c-name: "mailmbox_open";
+end;
+
+define C-function mailmbox-close
+  input parameter folder_ :: <mailmbox-folder*>;
+  c-name: "mailmbox_close";
+end;
+
+define C-function mailmbox-validate-write-lock
+  input parameter folder_ :: <mailmbox-folder*>;
+  result res :: <C-signed-int>;
+  c-name: "mailmbox_validate_write_lock";
+end;
+
+define C-function mailmbox-validate-read-lock
+  input parameter folder_ :: <mailmbox-folder*>;
+  result res :: <C-signed-int>;
+  c-name: "mailmbox_validate_read_lock";
+end;
+
+define C-function mailmbox-fetch-msg-no-lock
+  input parameter folder_ :: <mailmbox-folder*>;
+  input parameter num_ :: <uint32-t>;
+  input parameter result_ :: <char**>;
+  input parameter result-len_ :: <size-t*>;
+  result res :: <C-signed-int>;
+  c-name: "mailmbox_fetch_msg_no_lock";
+end;
+
+define C-function mailmbox-fetch-msg-headers-no-lock
+  input parameter folder_ :: <mailmbox-folder*>;
+  input parameter num_ :: <uint32-t>;
+  input parameter result_ :: <char**>;
+  input parameter result-len_ :: <size-t*>;
+  result res :: <C-signed-int>;
+  c-name: "mailmbox_fetch_msg_headers_no_lock";
+end;
+
+define C-function mailmbox-append-message-list-no-lock
+  input parameter folder_ :: <mailmbox-folder*>;
+  input parameter append-tab_ :: <carray*>;
+  result res :: <C-signed-int>;
+  c-name: "mailmbox_append_message_list_no_lock";
+end;
+
+define C-function mailmbox-expunge-no-lock
+  input parameter folder_ :: <mailmbox-folder*>;
+  result res :: <C-signed-int>;
+  c-name: "mailmbox_expunge_no_lock";
+end;
+
+define constant $MAILMH-NO-ERROR = 0;
+define constant $MAILMH-ERROR-FOLDER = 1;
+define constant $MAILMH-ERROR-MEMORY = 2;
+define constant $MAILMH-ERROR-FILE = 3;
+define constant $MAILMH-ERROR-COULD-NOT-ALLOC-MSG = 4;
+define constant $MAILMH-ERROR-RENAME = 5;
+define constant $MAILMH-ERROR-MSG-NOT-FOUND = 6;
+
+define C-pointer-type <mailmh-folder*> => <mailmh-folder>;
+define C-struct <mailmh-folder>
+  slot mailmh_folder$fl-filename :: <char*>;
+  slot mailmh_folder$fl-array-index :: <C-unsigned-int>;
+  slot mailmh_folder$fl-name :: <char*>;
+  slot mailmh_folder$fl-mtime :: <C-signed-long>;
+  slot mailmh_folder$fl-parent :: <mailmh-folder*>;
+  slot mailmh_folder$fl-max-index :: <C-unsigned-int>;
+  slot mailmh_folder$fl-msgs-tab :: <carray*>;
+  slot mailmh_folder$fl-msgs-hash :: <chash*>;
+  slot mailmh_folder$fl-subfolders-tab :: <carray*>;
+  slot mailmh_folder$fl-subfolders-hash :: <chash*>;
+end;
+
+define C-struct <mailmh>
+  slot mailmh$mh-main :: <mailmh-folder*>;
+end;
+
+define C-struct <mailmh-msg-info>
+  slot mailmh_msg_info$msg-array-index :: <C-unsigned-int>;
+  slot mailmh_msg_info$msg-index :: <C-unsigned-int>;
+  slot mailmh_msg_info$msg-size :: <C-unsigned-long>;
+  slot mailmh_msg_info$msg-mtime :: <C-signed-long>;
+end;
+
+define C-pointer-type <mailmh*> => <mailmh>;
+define C-function mailmh-new
+  input parameter foldername_ :: <char*>;
+  result res :: <mailmh*>;
+  c-name: "mailmh_new";
+end;
+
+define C-function mailmh-free
+  input parameter f_ :: <mailmh*>;
+  c-name: "mailmh_free";
+end;
+
+define C-pointer-type <mailmh-msg-info*> => <mailmh-msg-info>;
+define C-function mailmh-msg-info-new
+  input parameter indx_ :: <uint32-t>;
+  input parameter size_ :: <size-t>;
+  input parameter mtime_ :: <time-t>;
+  result res :: <mailmh-msg-info*>;
+  c-name: "mailmh_msg_info_new";
+end;
+
+define C-function mailmh-msg-info-free
+  input parameter msg-info_ :: <mailmh-msg-info*>;
+  c-name: "mailmh_msg_info_free";
+end;
+
+define C-function mailmh-folder-new
+  input parameter parent_ :: <mailmh-folder*>;
+  input parameter name_ :: <char*>;
+  result res :: <mailmh-folder*>;
+  c-name: "mailmh_folder_new";
+end;
+
+define C-function mailmh-folder-free
+  input parameter folder_ :: <mailmh-folder*>;
+  c-name: "mailmh_folder_free";
+end;
+
+define C-function mailmh-folder-add-subfolder
+  input parameter parent_ :: <mailmh-folder*>;
+  input parameter name_ :: <char*>;
+  result res :: <C-signed-int>;
+  c-name: "mailmh_folder_add_subfolder";
+end;
+
+define C-function mailmh-folder-find
+  input parameter root_ :: <mailmh-folder*>;
+  input parameter filename_ :: <char*>;
+  result res :: <mailmh-folder*>;
+  c-name: "mailmh_folder_find";
+end;
+
+define C-function mailmh-folder-remove-subfolder
+  input parameter folder_ :: <mailmh-folder*>;
+  result res :: <C-signed-int>;
+  c-name: "mailmh_folder_remove_subfolder";
+end;
+
+define C-function mailmh-folder-rename-subfolder
+  input parameter src-folder_ :: <mailmh-folder*>;
+  input parameter dst-folder_ :: <mailmh-folder*>;
+  input parameter new-name_ :: <char*>;
+  result res :: <C-signed-int>;
+  c-name: "mailmh_folder_rename_subfolder";
+end;
+
+define C-function mailmh-folder-get-message-filename
+  input parameter folder_ :: <mailmh-folder*>;
+  input parameter indx_ :: <uint32-t>;
+  input parameter result_ :: <char**>;
+  result res :: <C-signed-int>;
+  c-name: "mailmh_folder_get_message_filename";
+end;
+
+define C-pointer-type <int*> => <C-signed-int>;
+define C-function mailmh-folder-get-message-fd
+  input parameter folder_ :: <mailmh-folder*>;
+  input parameter indx_ :: <uint32-t>;
+  input parameter flags_ :: <C-signed-int>;
+  input parameter result_ :: <int*>;
+  result res :: <C-signed-int>;
+  c-name: "mailmh_folder_get_message_fd";
+end;
+
+define C-function mailmh-folder-get-message-size
+  input parameter folder_ :: <mailmh-folder*>;
+  input parameter indx_ :: <uint32-t>;
+  input parameter result_ :: <size-t*>;
+  result res :: <C-signed-int>;
+  c-name: "mailmh_folder_get_message_size";
+end;
+
+define C-function mailmh-folder-add-message-uid
+  input parameter folder_ :: <mailmh-folder*>;
+  input parameter message_ :: <char*>;
+  input parameter size_ :: <size-t>;
+  input parameter pindex_ :: <uint32-t*>;
+  result res :: <C-signed-int>;
+  c-name: "mailmh_folder_add_message_uid";
+end;
+
+define C-function mailmh-folder-add-message
+  input parameter folder_ :: <mailmh-folder*>;
+  input parameter message_ :: <char*>;
+  input parameter size_ :: <size-t>;
+  result res :: <C-signed-int>;
+  c-name: "mailmh_folder_add_message";
+end;
+
+define C-function mailmh-folder-add-message-file-uid
+  input parameter folder_ :: <mailmh-folder*>;
+  input parameter fd_ :: <C-signed-int>;
+  input parameter pindex_ :: <uint32-t*>;
+  result res :: <C-signed-int>;
+  c-name: "mailmh_folder_add_message_file_uid";
+end;
+
+define C-function mailmh-folder-add-message-file
+  input parameter folder_ :: <mailmh-folder*>;
+  input parameter fd_ :: <C-signed-int>;
+  result res :: <C-signed-int>;
+  c-name: "mailmh_folder_add_message_file";
+end;
+
+define C-function mailmh-folder-remove-message
+  input parameter folder_ :: <mailmh-folder*>;
+  input parameter indx_ :: <uint32-t>;
+  result res :: <C-signed-int>;
+  c-name: "mailmh_folder_remove_message";
+end;
+
+define C-function mailmh-folder-move-message
+  input parameter dest-folder_ :: <mailmh-folder*>;
+  input parameter src-folder_ :: <mailmh-folder*>;
+  input parameter indx_ :: <uint32-t>;
+  result res :: <C-signed-int>;
+  c-name: "mailmh_folder_move_message";
+end;
+
+define C-function mailmh-folder-update
+  input parameter folder_ :: <mailmh-folder*>;
+  result res :: <C-signed-int>;
+  c-name: "mailmh_folder_update";
+end;
+
+define C-function mailmh-folder-get-message-number
+  input parameter folder_ :: <mailmh-folder*>;
+  result res :: <C-unsigned-int>;
+  c-name: "mailmh_folder_get_message_number";
+end;
+
+define C-struct <mailimap-capability-data>
+  slot mailimap_capability_data$cap-list :: <clist*>;
+end;
+
+define C-pointer-type <mailimap-capability-data*> => <mailimap-capability-data>;
+define C-struct <mailimap-connection-info>
+  slot mailimap_connection_info$imap-capability :: <mailimap-capability-data*>;
+end;
+
+define C-pointer-type <mailimap-connection-info*> => <mailimap-connection-info>;
+define C-struct <mailimap-flag-list>
+  slot mailimap_flag_list$fl-list :: <clist*>;
+end;
+
+define C-pointer-type <mailimap-flag-list*> => <mailimap-flag-list>;
+define C-struct <mailimap-selection-info>
+  slot mailimap_selection_info$sel-perm-flags :: <clist*>;
+  slot mailimap_selection_info$sel-perm :: <C-signed-int>;
+  slot mailimap_selection_info$sel-uidnext :: <C-unsigned-int>;
+  slot mailimap_selection_info$sel-uidvalidity :: <C-unsigned-int>;
+  slot mailimap_selection_info$sel-first-unseen :: <C-unsigned-int>;
+  slot mailimap_selection_info$sel-flags :: <mailimap-flag-list*>;
+  slot mailimap_selection_info$sel-exists :: <C-unsigned-int>;
+  slot mailimap_selection_info$sel-recent :: <C-unsigned-int>;
+  slot mailimap_selection_info$sel-unseen :: <C-unsigned-int>;
+  bitfield slot mailimap_selection_info$sel-has-exists :: <C-int>, width: 1;
+  bitfield slot mailimap_selection_info$sel-has-recent :: <C-int>, width: 1;
+end;
+
+define C-pointer-type <mailimap-selection-info*> => <mailimap-selection-info>;
+define C-struct <mailimap-mailbox-data-status>
+  slot mailimap_mailbox_data_status$st-mailbox :: <char*>;
+  slot mailimap_mailbox_data_status$st-info-list :: <clist*>;
+end;
+
+define C-pointer-type <mailimap-mailbox-data-status*> => <mailimap-mailbox-data-status>;
+define C-struct <mailimap-response-info>
+  slot mailimap_response_info$rsp-alert :: <char*>;
+  slot mailimap_response_info$rsp-parse :: <char*>;
+  slot mailimap_response_info$rsp-badcharset :: <clist*>;
+  slot mailimap_response_info$rsp-trycreate :: <C-signed-int>;
+  slot mailimap_response_info$rsp-mailbox-list :: <clist*>;
+  slot mailimap_response_info$rsp-mailbox-lsub :: <clist*>;
+  slot mailimap_response_info$rsp-search-result :: <clist*>;
+  slot mailimap_response_info$rsp-status :: <mailimap-mailbox-data-status*>;
+  slot mailimap_response_info$rsp-expunged :: <clist*>;
+  slot mailimap_response_info$rsp-fetch-list :: <clist*>;
+  slot mailimap_response_info$rsp-extension-list :: <clist*>;
+  slot mailimap_response_info$rsp-atom :: <char*>;
+  slot mailimap_response_info$rsp-value :: <char*>;
+end;
+
+define C-pointer-type <mailimap-response-info*> => <mailimap-response-info>;
+define C-struct <anonymous-1081>
+  slot anonymous-1081$sasl-conn :: <C-void*>;
+  slot anonymous-1081$sasl-server-fqdn :: <char*>;
+  slot anonymous-1081$sasl-login :: <char*>;
+  slot anonymous-1081$sasl-auth-name :: <char*>;
+  slot anonymous-1081$sasl-password :: <char*>;
+  slot anonymous-1081$sasl-realm :: <char*>;
+  slot anonymous-1081$sasl-secret :: <C-void*>;
+end;
+
+define C-struct <mailimap-msg-att>
+  slot mailimap_msg_att$att-list :: <clist*>;
+  slot mailimap_msg_att$att-number :: <C-unsigned-int>;
+end;
+
+define C-pointer-type <mailimap-msg-att*> => <mailimap-msg-att>;
+define constant <anonymous-1080> = <C-function-pointer>;
+define constant <mailimap-msg-att-handler> = <anonymous-1080>;
+
+define C-pointer-type <mailimap-msg-att-handler*> => <mailimap-msg-att-handler>;
+define constant <imap-logger> = <C-function-pointer>;
+define C-struct <mailimap>
+  slot mailimap$imap-response :: <char*>;
+  slot mailimap$imap-stream :: <mailstream*>;
+  slot mailimap$imap-progr-rate :: <C-unsigned-long>;
+  slot mailimap$imap-progr-fun :: <progress-function*>;
+  slot mailimap$imap-stream-buffer :: <MMAPString*>;
+  slot mailimap$imap-response-buffer :: <MMAPString*>;
+  slot mailimap$imap-state :: <C-signed-int>;
+  slot mailimap$imap-tag :: <C-signed-int>;
+  slot mailimap$imap-connection-info :: <mailimap-connection-info*>;
+  slot mailimap$imap-selection-info :: <mailimap-selection-info*>;
+  slot mailimap$imap-response-info :: <mailimap-response-info*>;
+  slot mailimap$imap-sasl :: <anonymous-1081>;
+  slot mailimap$imap-idle-timestamp :: <C-signed-long>;
+  slot mailimap$imap-idle-maxdelay :: <C-signed-long>;
+  slot mailimap$imap-body-progress-fun :: <mailprogress-function*>;
+  slot mailimap$imap-items-progress-fun :: <mailprogress-function*>;
+  slot mailimap$imap-progress-context :: <C-void*>;
+  slot mailimap$imap-msg-att-handler :: <mailimap-msg-att-handler*>;
+  slot mailimap$imap-msg-att-handler-context :: <C-void*>;
+  slot mailimap$imap-timeout :: <C-signed-long>;
+  slot mailimap$imap-logger :: <imap-logger>;
+  slot mailimap$imap-logger-context :: <C-void*>;
+end;
+
+define C-pointer-type <mailimap*> => <mailimap>;
+define C-function mailimap-connect
+  input parameter session_ :: <mailimap*>;
+  input parameter s_ :: <mailstream*>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_connect";
+end;
+
+define C-struct <mailimap-date-time>
+  slot mailimap_date_time$dt-day :: <C-signed-int>;
+  slot mailimap_date_time$dt-month :: <C-signed-int>;
+  slot mailimap_date_time$dt-year :: <C-signed-int>;
+  slot mailimap_date_time$dt-hour :: <C-signed-int>;
+  slot mailimap_date_time$dt-min :: <C-signed-int>;
+  slot mailimap_date_time$dt-sec :: <C-signed-int>;
+  slot mailimap_date_time$dt-zone :: <C-signed-int>;
+end;
+
+define C-pointer-type <mailimap-date-time*> => <mailimap-date-time>;
+define C-function mailimap-append
+  input parameter session_ :: <mailimap*>;
+  input parameter mailbox_ :: <char*>;
+  input parameter flag-list_ :: <mailimap-flag-list*>;
+  input parameter date-time_ :: <mailimap-date-time*>;
+  input parameter literal_ :: <char*>;
+  input parameter literal-size_ :: <size-t>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_append";
+end;
+
+define C-function mailimap-noop
+  input parameter session_ :: <mailimap*>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_noop";
+end;
+
+define C-function mailimap-logout
+  input parameter session_ :: <mailimap*>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_logout";
+end;
+
+define C-pointer-type <mailimap-capability-data**> => <mailimap-capability-data*>;
+define C-function mailimap-capability
+  input parameter session_ :: <mailimap*>;
+  input parameter result_ :: <mailimap-capability-data**>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_capability";
+end;
+
+define C-function mailimap-check
+  input parameter session_ :: <mailimap*>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_check";
+end;
+
+define C-function mailimap-close
+  input parameter session_ :: <mailimap*>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_close";
+end;
+
+define C-function mailimap-expunge
+  input parameter session_ :: <mailimap*>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_expunge";
+end;
+
+define C-struct <mailimap-set>
+  slot mailimap_set$set-list :: <clist*>;
+end;
+
+define C-pointer-type <mailimap-set*> => <mailimap-set>;
+define C-function mailimap-copy
+  input parameter session_ :: <mailimap*>;
+  input parameter set_ :: <mailimap-set*>;
+  input parameter mb_ :: <char*>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_copy";
+end;
+
+define C-function mailimap-uid-copy
+  input parameter session_ :: <mailimap*>;
+  input parameter set_ :: <mailimap-set*>;
+  input parameter mb_ :: <char*>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_uid_copy";
+end;
+
+define C-function mailimap-create
+  input parameter session_ :: <mailimap*>;
+  input parameter mb_ :: <char*>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_create";
+end;
+
+define C-function mailimap-delete
+  input parameter session_ :: <mailimap*>;
+  input parameter mb_ :: <char*>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_delete";
+end;
+
+define C-function mailimap-examine
+  input parameter session_ :: <mailimap*>;
+  input parameter mb_ :: <char*>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_examine";
+end;
+
+define C-struct <mailimap-header-list>
+  slot mailimap_header_list$hdr-list :: <clist*>;
+end;
+
+define C-pointer-type <mailimap-header-list*> => <mailimap-header-list>;
+define C-struct <mailimap-section-msgtext>
+  slot mailimap_section_msgtext$sec-type :: <C-signed-int>;
+  slot mailimap_section_msgtext$sec-header-list :: <mailimap-header-list*>;
+end;
+
+define C-pointer-type <mailimap-section-msgtext*> => <mailimap-section-msgtext>;
+define C-struct <mailimap-section-part>
+  slot mailimap_section_part$sec-id :: <clist*>;
+end;
+
+define C-pointer-type <mailimap-section-part*> => <mailimap-section-part>;
+define C-union <anonymous-1008>
+  slot anonymous-1008$sec-msgtext :: <mailimap-section-msgtext*>;
+  slot anonymous-1008$sec-part :: <mailimap-section-part*>;
+end;
+
+define C-struct <mailimap-section-text>
+  slot mailimap_section_text$sec-type :: <C-signed-int>;
+  slot mailimap_section_text$sec-msgtext :: <mailimap-section-msgtext*>;
+end;
+
+define C-pointer-type <mailimap-section-text*> => <mailimap-section-text>;
+define C-struct <mailimap-section-spec>
+  slot mailimap_section_spec$sec-type :: <C-signed-int>;
+  slot mailimap_section_spec$sec-data :: <anonymous-1008>;
+  slot mailimap_section_spec$sec-text :: <mailimap-section-text*>;
+end;
+
+define C-pointer-type <mailimap-section-spec*> => <mailimap-section-spec>;
+define C-struct <mailimap-section>
+  slot mailimap_section$sec-spec :: <mailimap-section-spec*>;
+end;
+
+define C-pointer-type <mailimap-section*> => <mailimap-section>;
+define C-struct <mailimap-fetch-att>
+  slot mailimap_fetch_att$att-type :: <C-signed-int>;
+  slot mailimap_fetch_att$att-section :: <mailimap-section*>;
+  slot mailimap_fetch_att$att-offset :: <C-unsigned-int>;
+  slot mailimap_fetch_att$att-size :: <C-unsigned-int>;
+  slot mailimap_fetch_att$att-extension :: <char*>;
+end;
+
+define C-pointer-type <mailimap-fetch-att*> => <mailimap-fetch-att>;
+define C-union <anonymous-1024>
+  slot anonymous-1024$ft-fetch-att :: <mailimap-fetch-att*>;
+  slot anonymous-1024$ft-fetch-att-list :: <clist*>;
+end;
+
+define C-struct <mailimap-fetch-type>
+  slot mailimap_fetch_type$ft-type :: <C-signed-int>;
+  slot mailimap_fetch_type$ft-data :: <anonymous-1024>;
+end;
+
+define C-pointer-type <mailimap-fetch-type*> => <mailimap-fetch-type>;
+define C-pointer-type <clist**> => <clist*>;
+define C-function mailimap-fetch
+  input parameter session_ :: <mailimap*>;
+  input parameter set_ :: <mailimap-set*>;
+  input parameter fetch-type_ :: <mailimap-fetch-type*>;
+  input parameter result_ :: <clist**>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_fetch";
+end;
+
+define C-function mailimap-uid-fetch
+  input parameter session_ :: <mailimap*>;
+  input parameter set_ :: <mailimap-set*>;
+  input parameter fetch-type_ :: <mailimap-fetch-type*>;
+  input parameter result_ :: <clist**>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_uid_fetch";
+end;
+
+define C-function mailimap-fetch-list-free
+  input parameter fetch-list_ :: <clist*>;
+  c-name: "mailimap_fetch_list_free";
+end;
+
+define C-function mailimap-list
+  input parameter session_ :: <mailimap*>;
+  input parameter mb_ :: <char*>;
+  input parameter list-mb_ :: <char*>;
+  input parameter result_ :: <clist**>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_list";
+end;
+
+define C-function mailimap-login
+  input parameter session_ :: <mailimap*>;
+  input parameter userid_ :: <char*>;
+  input parameter password_ :: <char*>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_login";
+end;
+
+define C-function mailimap-authenticate
+  input parameter session_ :: <mailimap*>;
+  input parameter auth-type_ :: <char*>;
+  input parameter server-fqdn_ :: <char*>;
+  input parameter local-ip-port_ :: <char*>;
+  input parameter remote-ip-port_ :: <char*>;
+  input parameter login_ :: <char*>;
+  input parameter auth-name_ :: <char*>;
+  input parameter password_ :: <char*>;
+  input parameter realm_ :: <char*>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_authenticate";
+end;
+
+define C-function mailimap-lsub
+  input parameter session_ :: <mailimap*>;
+  input parameter mb_ :: <char*>;
+  input parameter list-mb_ :: <char*>;
+  input parameter result_ :: <clist**>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_lsub";
+end;
+
+define C-function mailimap-list-result-free
+  input parameter list_ :: <clist*>;
+  c-name: "mailimap_list_result_free";
+end;
+
+define C-function mailimap-rename
+  input parameter session_ :: <mailimap*>;
+  input parameter mb_ :: <char*>;
+  input parameter new-name_ :: <char*>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_rename";
+end;
+
+define C-struct <mailimap-date>
+  slot mailimap_date$dt-day :: <C-signed-int>;
+  slot mailimap_date$dt-month :: <C-signed-int>;
+  slot mailimap_date$dt-year :: <C-signed-int>;
+end;
+
+define C-pointer-type <mailimap-date*> => <mailimap-date>;
+define C-struct <anonymous-1031>
+  slot anonymous-1031$sk-header-name :: <char*>;
+  slot anonymous-1031$sk-header-value :: <char*>;
+end;
+
+define C-struct <anonymous-1032>
+  slot anonymous-1032$sk-or1 :: <mailimap-search-key*>;
+  slot anonymous-1032$sk-or2 :: <mailimap-search-key*>;
+end;
+
+define constant <uint64-t> = <C-unsigned-long>;
+
+define C-union <anonymous-909>
+  slot anonymous-909$fl-keyword :: <char*>;
+  slot anonymous-909$fl-extension :: <char*>;
+end;
+
+define C-struct <mailimap-flag>
+  slot mailimap_flag$fl-type :: <C-signed-int>;
+  slot mailimap_flag$fl-data :: <anonymous-909>;
+end;
+
+define C-pointer-type <mailimap-flag*> => <mailimap-flag>;
+define C-struct <anonymous-1033>
+  slot anonymous-1033$sk-entry-name :: <mailimap-flag*>;
+  slot anonymous-1033$sk-entry-type-req :: <C-signed-int>;
+  slot anonymous-1033$sk-modseq-valzer :: <C-unsigned-long>;
+end;
+
+define C-union <anonymous-1034>
+  slot anonymous-1034$sk-bcc :: <char*>;
+  slot anonymous-1034$sk-before :: <mailimap-date*>;
+  slot anonymous-1034$sk-body :: <char*>;
+  slot anonymous-1034$sk-cc :: <char*>;
+  slot anonymous-1034$sk-from :: <char*>;
+  slot anonymous-1034$sk-keyword :: <char*>;
+  slot anonymous-1034$sk-on :: <mailimap-date*>;
+  slot anonymous-1034$sk-since :: <mailimap-date*>;
+  slot anonymous-1034$sk-subject :: <char*>;
+  slot anonymous-1034$sk-text :: <char*>;
+  slot anonymous-1034$sk-to :: <char*>;
+  slot anonymous-1034$sk-unkeyword :: <char*>;
+  slot anonymous-1034$sk-header :: <anonymous-1031>;
+  slot anonymous-1034$sk-larger :: <C-unsigned-int>;
+  slot anonymous-1034$sk-not :: <mailimap-search-key*>;
+  slot anonymous-1034$sk-or :: <anonymous-1032>;
+  slot anonymous-1034$sk-sentbefore :: <mailimap-date*>;
+  slot anonymous-1034$sk-senton :: <mailimap-date*>;
+  slot anonymous-1034$sk-sentsince :: <mailimap-date*>;
+  slot anonymous-1034$sk-smaller :: <C-unsigned-int>;
+  slot anonymous-1034$sk-uid :: <mailimap-set*>;
+  slot anonymous-1034$sk-set :: <mailimap-set*>;
+  slot anonymous-1034$sk-xgmthrid :: <C-unsigned-long>;
+  slot anonymous-1034$sk-xgmmsgid :: <C-unsigned-long>;
+  slot anonymous-1034$sk-xgmraw :: <char*>;
+  slot anonymous-1034$sk-multiple :: <clist*>;
+  slot anonymous-1034$sk-modseq :: <anonymous-1033>;
+end;
+
+define C-struct <mailimap-search-key>
+  slot mailimap_search_key$sk-type :: <C-signed-int>;
+  slot mailimap_search_key$sk-data :: <anonymous-1034>;
+end;
+
+define C-pointer-type <mailimap-search-key*> => <mailimap-search-key>;
+define C-function mailimap-search
+  input parameter session_ :: <mailimap*>;
+  input parameter charset_ :: <char*>;
+  input parameter key_ :: <mailimap-search-key*>;
+  input parameter result_ :: <clist**>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_search";
+end;
+
+define C-function mailimap-uid-search
+  input parameter session_ :: <mailimap*>;
+  input parameter charset_ :: <char*>;
+  input parameter key_ :: <mailimap-search-key*>;
+  input parameter result_ :: <clist**>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_uid_search";
+end;
+
+define C-function mailimap-search-result-free
+  input parameter search-result_ :: <clist*>;
+  c-name: "mailimap_search_result_free";
+end;
+
+define C-function mailimap-select
+  input parameter session_ :: <mailimap*>;
+  input parameter mb_ :: <char*>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_select";
+end;
+
+define C-struct <mailimap-status-att-list>
+  slot mailimap_status_att_list$att-list :: <clist*>;
+end;
+
+define C-pointer-type <mailimap-status-att-list*> => <mailimap-status-att-list>;
+define C-pointer-type <mailimap-mailbox-data-status**> => <mailimap-mailbox-data-status*>;
+define C-function mailimap-status
+  input parameter session_ :: <mailimap*>;
+  input parameter mb_ :: <char*>;
+  input parameter status-att-list_ :: <mailimap-status-att-list*>;
+  input parameter result_ :: <mailimap-mailbox-data-status**>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_status";
+end;
+
+define C-struct <mailimap-store-att-flags>
+  slot mailimap_store_att_flags$fl-sign :: <C-signed-int>;
+  slot mailimap_store_att_flags$fl-silent :: <C-signed-int>;
+  slot mailimap_store_att_flags$fl-flag-list :: <mailimap-flag-list*>;
+end;
+
+define C-pointer-type <mailimap-store-att-flags*> => <mailimap-store-att-flags>;
+define C-function mailimap-store
+  input parameter session_ :: <mailimap*>;
+  input parameter set_ :: <mailimap-set*>;
+  input parameter store-att-flags_ :: <mailimap-store-att-flags*>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_store";
+end;
+
+define C-function mailimap-uid-store
+  input parameter session_ :: <mailimap*>;
+  input parameter set_ :: <mailimap-set*>;
+  input parameter store-att-flags_ :: <mailimap-store-att-flags*>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_uid_store";
+end;
+
+define C-function mailimap-subscribe
+  input parameter session_ :: <mailimap*>;
+  input parameter mb_ :: <char*>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_subscribe";
+end;
+
+define C-function mailimap-unsubscribe
+  input parameter session_ :: <mailimap*>;
+  input parameter mb_ :: <char*>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_unsubscribe";
+end;
+
+define C-function mailimap-starttls
+  input parameter session_ :: <mailimap*>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_starttls";
+end;
+
+define C-function mailimap-new
+  input parameter imap-progr-rate_ :: <size-t>;
+  input parameter imap-progr-fun_ :: <progress-function*>;
+  result res :: <mailimap*>;
+  c-name: "mailimap_new";
+end;
+
+define C-function mailimap-free
+  input parameter session_ :: <mailimap*>;
+  c-name: "mailimap_free";
+end;
+
+define C-function mailimap-send-current-tag
+  input parameter session_ :: <mailimap*>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_send_current_tag";
+end;
+
+define C-function mailimap-read-line
+  input parameter session_ :: <mailimap*>;
+  result res :: <char*>;
+  c-name: "mailimap_read_line";
+end;
+
+define C-struct <anonymous-996>
+  slot anonymous-996$atom-name :: <char*>;
+  slot anonymous-996$atom-value :: <char*>;
+end;
+
+define C-pointer-type <mailimap-extension-data**> => <mailimap-extension-data*>;
+define constant <ext-parser> = <C-function-pointer>;
+define constant <ext-free> = <C-function-pointer>;
+define C-struct <mailimap-extension-api>
+  slot mailimap_extension_api$ext-name :: <char*>;
+  slot mailimap_extension_api$ext-id :: <C-signed-int>;
+  slot mailimap_extension_api$ext-parser :: <ext-parser>;
+  slot mailimap_extension_api$ext-free :: <ext-free>;
+end;
+
+define C-pointer-type <mailimap-extension-api*> => <mailimap-extension-api>;
+define C-struct <mailimap-extension-data>
+  slot mailimap_extension_data$ext-extension :: <mailimap-extension-api*>;
+  slot mailimap_extension_data$ext-type :: <C-signed-int>;
+  slot mailimap_extension_data$ext-data :: <C-void*>;
+end;
+
+define C-pointer-type <mailimap-extension-data*> => <mailimap-extension-data>;
+define C-union <anonymous-997>
+  slot anonymous-997$rc-badcharset :: <clist*>;
+  slot anonymous-997$rc-cap-data :: <mailimap-capability-data*>;
+  slot anonymous-997$rc-perm-flags :: <clist*>;
+  slot anonymous-997$rc-uidnext :: <C-unsigned-int>;
+  slot anonymous-997$rc-uidvalidity :: <C-unsigned-int>;
+  slot anonymous-997$rc-first-unseen :: <C-unsigned-int>;
+  slot anonymous-997$rc-atom :: <anonymous-996>;
+  slot anonymous-997$rc-ext-data :: <mailimap-extension-data*>;
+end;
+
+define C-struct <mailimap-resp-text-code>
+  slot mailimap_resp_text_code$rc-type :: <C-signed-int>;
+  slot mailimap_resp_text_code$rc-data :: <anonymous-997>;
+end;
+
+define C-pointer-type <mailimap-resp-text-code*> => <mailimap-resp-text-code>;
+define C-struct <mailimap-resp-text>
+  slot mailimap_resp_text$rsp-code :: <mailimap-resp-text-code*>;
+  slot mailimap_resp_text$rsp-text :: <char*>;
+end;
+
+define C-pointer-type <mailimap-resp-text*> => <mailimap-resp-text>;
+define C-struct <mailimap-resp-cond-state>
+  slot mailimap_resp_cond_state$rsp-type :: <C-signed-int>;
+  slot mailimap_resp_cond_state$rsp-text :: <mailimap-resp-text*>;
+end;
+
+define C-pointer-type <mailimap-resp-cond-state*> => <mailimap-resp-cond-state>;
+define C-struct <mailimap-response-tagged>
+  slot mailimap_response_tagged$rsp-tag :: <char*>;
+  slot mailimap_response_tagged$rsp-cond-state :: <mailimap-resp-cond-state*>;
+end;
+
+define C-pointer-type <mailimap-response-tagged*> => <mailimap-response-tagged>;
+define C-struct <mailimap-resp-cond-bye>
+  slot mailimap_resp_cond_bye$rsp-text :: <mailimap-resp-text*>;
+end;
+
+define C-pointer-type <mailimap-resp-cond-bye*> => <mailimap-resp-cond-bye>;
+define C-struct <mailimap-response-fatal>
+  slot mailimap_response_fatal$rsp-bye :: <mailimap-resp-cond-bye*>;
+end;
+
+define C-pointer-type <mailimap-response-fatal*> => <mailimap-response-fatal>;
+define C-union <anonymous-978>
+  slot anonymous-978$rsp-tagged :: <mailimap-response-tagged*>;
+  slot anonymous-978$rsp-fatal :: <mailimap-response-fatal*>;
+end;
+
+define C-struct <mailimap-response-done>
+  slot mailimap_response_done$rsp-type :: <C-signed-int>;
+  slot mailimap_response_done$rsp-data :: <anonymous-978>;
+end;
+
+define C-pointer-type <mailimap-response-done*> => <mailimap-response-done>;
+define C-struct <mailimap-response>
+  slot mailimap_response$rsp-cont-req-or-resp-data-list :: <clist*>;
+  slot mailimap_response$rsp-resp-done :: <mailimap-response-done*>;
+end;
+
+define C-pointer-type <mailimap-response*> => <mailimap-response>;
+define C-pointer-type <mailimap-response**> => <mailimap-response*>;
+define C-function mailimap-parse-response
+  input parameter session_ :: <mailimap*>;
+  input parameter result_ :: <mailimap-response**>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_parse_response";
+end;
+
+define C-function mailimap-set-progress-callback
+  input parameter session_ :: <mailimap*>;
+  input parameter body-progr-fun_ :: <mailprogress-function*>;
+  input parameter items-progr-fun_ :: <mailprogress-function*>;
+  input parameter context_ :: <C-void*>;
+  c-name: "mailimap_set_progress_callback";
+end;
+
+define C-function mailimap-set-msg-att-handler
+  input parameter session_ :: <mailimap*>;
+  input parameter handler_ :: <mailimap-msg-att-handler*>;
+  input parameter context_ :: <C-void*>;
+  c-name: "mailimap_set_msg_att_handler";
+end;
+
+define C-function mailimap-set-timeout
+  input parameter session_ :: <mailimap*>;
+  input parameter timeout_ :: <time-t>;
+  c-name: "mailimap_set_timeout";
+end;
+
+define C-function mailimap-get-timeout
+  input parameter session_ :: <mailimap*>;
+  result res :: <time-t>;
+  c-name: "mailimap_get_timeout";
+end;
+
+define constant <logger> = <C-function-pointer>;
+define C-function mailimap-set-logger
+  input parameter session_ :: <mailimap*>;
+  input parameter logger_ :: <logger>;
+  input parameter logger-context_ :: <C-void*>;
+  c-name: "mailimap_set_logger";
+end;
+
+define C-function mailimap-socket-connect-voip
+  input parameter f_ :: <mailimap*>;
+  input parameter server_ :: <char*>;
+  input parameter port_ :: <uint16-t>;
+  input parameter voip-enabled_ :: <C-signed-int>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_socket_connect_voip";
+end;
+
+define C-function mailimap-socket-connect
+  input parameter f_ :: <mailimap*>;
+  input parameter server_ :: <char*>;
+  input parameter port_ :: <uint16-t>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_socket_connect";
+end;
+
+define C-function mailimap-socket-starttls
+  input parameter f_ :: <mailimap*>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_socket_starttls";
+end;
+
+define constant <callback> = <C-function-pointer>;
+define C-function mailimap-socket-starttls-with-callback
+  input parameter f_ :: <mailimap*>;
+  input parameter callback_ :: <callback>;
+  input parameter data_ :: <C-void*>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_socket_starttls_with_callback";
+end;
+
+define C-function mailimap-ssl-connect
+  input parameter f_ :: <mailimap*>;
+  input parameter server_ :: <char*>;
+  input parameter port_ :: <uint16-t>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_ssl_connect";
+end;
+
+define C-function mailimap-ssl-connect-voip
+  input parameter f_ :: <mailimap*>;
+  input parameter server_ :: <char*>;
+  input parameter port_ :: <uint16-t>;
+  input parameter voip-enabled_ :: <C-signed-int>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_ssl_connect_voip";
+end;
+
+define constant <callback> = <C-function-pointer>;
+define C-function mailimap-ssl-connect-with-callback
+  input parameter f_ :: <mailimap*>;
+  input parameter server_ :: <char*>;
+  input parameter port_ :: <uint16-t>;
+  input parameter callback_ :: <callback>;
+  input parameter data_ :: <C-void*>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_ssl_connect_with_callback";
+end;
+
+define constant <callback> = <C-function-pointer>;
+define C-function mailimap-ssl-connect-voip-with-callback
+  input parameter f_ :: <mailimap*>;
+  input parameter server_ :: <char*>;
+  input parameter port_ :: <uint16-t>;
+  input parameter voip-enabled_ :: <C-signed-int>;
+  input parameter callback_ :: <callback>;
+  input parameter data_ :: <C-void*>;
+  result res :: <C-signed-int>;
+  c-name: "mailimap_ssl_connect_voip_with_callback";
+end;
+
+define C-struct <anonymous-1416>
+  slot anonymous-1416$sasl-conn :: <C-void*>;
+  slot anonymous-1416$sasl-server-fqdn :: <char*>;
+  slot anonymous-1416$sasl-login :: <char*>;
+  slot anonymous-1416$sasl-auth-name :: <char*>;
+  slot anonymous-1416$sasl-password :: <char*>;
+  slot anonymous-1416$sasl-realm :: <char*>;
+  slot anonymous-1416$sasl-secret :: <C-void*>;
+end;
+
+define constant <pop3-logger> = <C-function-pointer>;
+define C-struct <mailpop3>
+  slot mailpop3$pop3-response :: <char*>;
+  slot mailpop3$pop3-timestamp :: <char*>;
+  slot mailpop3$pop3-stream :: <mailstream*>;
+  slot mailpop3$pop3-progr-rate :: <C-unsigned-long>;
+  slot mailpop3$pop3-progr-fun :: <progress-function*>;
+  slot mailpop3$pop3-stream-buffer :: <MMAPString*>;
+  slot mailpop3$pop3-response-buffer :: <MMAPString*>;
+  slot mailpop3$pop3-msg-tab :: <carray*>;
+  slot mailpop3$pop3-state :: <C-signed-int>;
+  slot mailpop3$pop3-deleted-count :: <C-unsigned-int>;
+  slot mailpop3$pop3-sasl :: <anonymous-1416>;
+  slot mailpop3$pop3-timeout :: <C-signed-long>;
+  slot mailpop3$pop3-progress-fun :: <mailprogress-function*>;
+  slot mailpop3$pop3-progress-context :: <C-void*>;
+  slot mailpop3$pop3-logger :: <pop3-logger>;
+  slot mailpop3$pop3-logger-context :: <C-void*>;
+end;
+
+define C-pointer-type <mailpop3*> => <mailpop3>;
+define C-function mailpop3-new
+  input parameter pop3-progr-rate_ :: <size-t>;
+  input parameter pop3-progr-fun_ :: <progress-function*>;
+  result res :: <mailpop3*>;
+  c-name: "mailpop3_new";
+end;
+
+define C-function mailpop3-free
+  input parameter f_ :: <mailpop3*>;
+  c-name: "mailpop3_free";
+end;
+
+define C-function mailpop3-set-timeout
+  input parameter f_ :: <mailpop3*>;
+  input parameter timeout_ :: <time-t>;
+  c-name: "mailpop3_set_timeout";
+end;
+
+define C-function mailpop3-get-timeout
+  input parameter f_ :: <mailpop3*>;
+  result res :: <time-t>;
+  c-name: "mailpop3_get_timeout";
+end;
+
+define C-function mailpop3-set-progress-callback
+  input parameter f_ :: <mailpop3*>;
+  input parameter progr-fun_ :: <mailprogress-function*>;
+  input parameter context_ :: <C-void*>;
+  c-name: "mailpop3_set_progress_callback";
+end;
+
+define C-function mailpop3-connect
+  input parameter f_ :: <mailpop3*>;
+  input parameter s_ :: <mailstream*>;
+  result res :: <C-signed-int>;
+  c-name: "mailpop3_connect";
+end;
+
+define C-function mailpop3-quit
+  input parameter f_ :: <mailpop3*>;
+  result res :: <C-signed-int>;
+  c-name: "mailpop3_quit";
+end;
+
+define C-function mailpop3-apop
+  input parameter f_ :: <mailpop3*>;
+  input parameter user_ :: <char*>;
+  input parameter password_ :: <char*>;
+  result res :: <C-signed-int>;
+  c-name: "mailpop3_apop";
+end;
+
+define C-function mailpop3-user
+  input parameter f_ :: <mailpop3*>;
+  input parameter user_ :: <char*>;
+  result res :: <C-signed-int>;
+  c-name: "mailpop3_user";
+end;
+
+define C-function mailpop3-pass
+  input parameter f_ :: <mailpop3*>;
+  input parameter password_ :: <char*>;
+  result res :: <C-signed-int>;
+  c-name: "mailpop3_pass";
+end;
+
+define C-pointer-type <carray**> => <carray*>;
+define C-function mailpop3-list
+  input parameter f_ :: <mailpop3*>;
+  input parameter result_ :: <carray**>;
+  result res :: <C-signed-int>;
+  c-name: "mailpop3_list";
+end;
+
+define C-function mailpop3-retr
+  input parameter f_ :: <mailpop3*>;
+  input parameter indx_ :: <C-unsigned-int>;
+  input parameter result_ :: <char**>;
+  input parameter result-len_ :: <size-t*>;
+  result res :: <C-signed-int>;
+  c-name: "mailpop3_retr";
+end;
+
+define C-function mailpop3-top
+  input parameter f_ :: <mailpop3*>;
+  input parameter indx_ :: <C-unsigned-int>;
+  input parameter count_ :: <C-unsigned-int>;
+  input parameter result_ :: <char**>;
+  input parameter result-len_ :: <size-t*>;
+  result res :: <C-signed-int>;
+  c-name: "mailpop3_top";
+end;
+
+define C-function mailpop3-dele
+  input parameter f_ :: <mailpop3*>;
+  input parameter indx_ :: <C-unsigned-int>;
+  result res :: <C-signed-int>;
+  c-name: "mailpop3_dele";
+end;
+
+define C-function mailpop3-noop
+  input parameter f_ :: <mailpop3*>;
+  result res :: <C-signed-int>;
+  c-name: "mailpop3_noop";
+end;
+
+define C-function mailpop3-rset
+  input parameter f_ :: <mailpop3*>;
+  result res :: <C-signed-int>;
+  c-name: "mailpop3_rset";
+end;
+
+define C-function mailpop3-top-free
+  input parameter str_ :: <char*>;
+  c-name: "mailpop3_top_free";
+end;
+
+define C-function mailpop3-retr-free
+  input parameter str_ :: <char*>;
+  c-name: "mailpop3_retr_free";
+end;
+
+define C-struct <mailpop3-msg-info>
+  slot mailpop3_msg_info$msg-index :: <C-unsigned-int>;
+  slot mailpop3_msg_info$msg-size :: <C-unsigned-int>;
+  slot mailpop3_msg_info$msg-uidl :: <char*>;
+  slot mailpop3_msg_info$msg-deleted :: <C-signed-int>;
+end;
+
+define C-pointer-type <mailpop3-msg-info*> => <mailpop3-msg-info>;
+define C-pointer-type <mailpop3-msg-info**> => <mailpop3-msg-info*>;
+define C-function mailpop3-get-msg-info
+  input parameter f_ :: <mailpop3*>;
+  input parameter indx_ :: <C-unsigned-int>;
+  input parameter result_ :: <mailpop3-msg-info**>;
+  result res :: <C-signed-int>;
+  c-name: "mailpop3_get_msg_info";
+end;
+
+define C-function mailpop3-capa
+  input parameter f_ :: <mailpop3*>;
+  input parameter result_ :: <clist**>;
+  result res :: <C-signed-int>;
+  c-name: "mailpop3_capa";
+end;
+
+define C-function mailpop3-capa-resp-free
+  input parameter capa-list_ :: <clist*>;
+  c-name: "mailpop3_capa_resp_free";
+end;
+
+define C-struct <mailpop3-stat-response>
+  slot mailpop3_stat_response$msgs-count :: <C-unsigned-int>;
+  slot mailpop3_stat_response$msgs-size :: <C-unsigned-long>;
+end;
+
+define C-pointer-type <mailpop3-stat-response*> => <mailpop3-stat-response>;
+define C-pointer-type <mailpop3-stat-response**> => <mailpop3-stat-response*>;
+define C-function mailpop3-stat
+  input parameter f_ :: <mailpop3*>;
+  input parameter result_ :: <mailpop3-stat-response**>;
+  result res :: <C-signed-int>;
+  c-name: "mailpop3_stat";
+end;
+
+define C-function mailpop3-stat-resp-free
+  input parameter stat-result_ :: <mailpop3-stat-response*>;
+  c-name: "mailpop3_stat_resp_free";
+end;
+
+define C-function mailpop3-stls
+  input parameter f_ :: <mailpop3*>;
+  result res :: <C-signed-int>;
+  c-name: "mailpop3_stls";
+end;
+
+define C-function mailpop3-auth
+  input parameter f_ :: <mailpop3*>;
+  input parameter auth-type_ :: <char*>;
+  input parameter server-fqdn_ :: <char*>;
+  input parameter local-ip-port_ :: <char*>;
+  input parameter remote-ip-port_ :: <char*>;
+  input parameter login_ :: <char*>;
+  input parameter auth-name_ :: <char*>;
+  input parameter password_ :: <char*>;
+  input parameter realm_ :: <char*>;
+  result res :: <C-signed-int>;
+  c-name: "mailpop3_auth";
+end;
+
+define constant <logger> = <C-function-pointer>;
+define C-function mailpop3-set-logger
+  input parameter session_ :: <mailpop3*>;
+  input parameter logger_ :: <logger>;
+  input parameter logger-context_ :: <C-void*>;
+  c-name: "mailpop3_set_logger";
+end;
+
+define constant $POP3-STRING-SIZE = 513;
+
+define C-function mailpop3-socket-connect
+  input parameter f_ :: <mailpop3*>;
+  input parameter server_ :: <char*>;
+  input parameter port_ :: <uint16-t>;
+  result res :: <C-signed-int>;
+  c-name: "mailpop3_socket_connect";
+end;
+
+define C-function mailpop3-socket-starttls
+  input parameter f_ :: <mailpop3*>;
+  result res :: <C-signed-int>;
+  c-name: "mailpop3_socket_starttls";
+end;
+
+define constant <callback> = <C-function-pointer>;
+define C-function mailpop3-socket-starttls-with-callback
+  input parameter f_ :: <mailpop3*>;
+  input parameter callback_ :: <callback>;
+  input parameter data_ :: <C-void*>;
+  result res :: <C-signed-int>;
+  c-name: "mailpop3_socket_starttls_with_callback";
+end;
+
+define C-function mailpop3-ssl-connect
+  input parameter f_ :: <mailpop3*>;
+  input parameter server_ :: <char*>;
+  input parameter port_ :: <uint16-t>;
+  result res :: <C-signed-int>;
+  c-name: "mailpop3_ssl_connect";
+end;
+
+define constant <callback> = <C-function-pointer>;
+define C-function mailpop3-ssl-connect-with-callback
+  input parameter f_ :: <mailpop3*>;
+  input parameter server_ :: <char*>;
+  input parameter port_ :: <uint16-t>;
+  input parameter callback_ :: <callback>;
+  input parameter data_ :: <C-void*>;
+  result res :: <C-signed-int>;
+  c-name: "mailpop3_ssl_connect_with_callback";
+end;
+
+define constant <nntp-logger> = <C-function-pointer>;
+define C-struct <newsnntp>
+  slot newsnntp$nntp-stream :: <mailstream*>;
+  slot newsnntp$nntp-readonly :: <C-signed-int>;
+  slot newsnntp$nntp-progr-rate :: <C-unsigned-int>;
+  slot newsnntp$nntp-progr-fun :: <progress-function*>;
+  slot newsnntp$nntp-stream-buffer :: <MMAPString*>;
+  slot newsnntp$nntp-response-buffer :: <MMAPString*>;
+  slot newsnntp$nntp-response :: <char*>;
+  slot newsnntp$nntp-timeout :: <C-signed-long>;
+  slot newsnntp$nntp-logger :: <nntp-logger>;
+  slot newsnntp$nntp-logger-context :: <C-void*>;
+end;
+
+define C-pointer-type <newsnntp*> => <newsnntp>;
+define C-function newsnntp-new
+  input parameter nntp-progr-rate_ :: <size-t>;
+  input parameter nntp-progr-fun_ :: <progress-function*>;
+  result res :: <newsnntp*>;
+  c-name: "newsnntp_new";
+end;
+
+define C-function newsnntp-free
+  input parameter session_ :: <newsnntp*>;
+  c-name: "newsnntp_free";
+end;
+
+define constant <logger> = <C-function-pointer>;
+define C-function newsnntp-set-logger
+  input parameter session_ :: <newsnntp*>;
+  input parameter logger_ :: <logger>;
+  input parameter logger-context_ :: <C-void*>;
+  c-name: "newsnntp_set_logger";
+end;
+
+define C-function newsnntp-set-timeout
+  input parameter session_ :: <newsnntp*>;
+  input parameter timeout_ :: <time-t>;
+  c-name: "newsnntp_set_timeout";
+end;
+
+define C-function newsnntp-get-timeout
+  input parameter session_ :: <newsnntp*>;
+  result res :: <time-t>;
+  c-name: "newsnntp_get_timeout";
+end;
+
+define C-function newsnntp-connect
+  input parameter session_ :: <newsnntp*>;
+  input parameter s_ :: <mailstream*>;
+  result res :: <C-signed-int>;
+  c-name: "newsnntp_connect";
+end;
+
+define C-function newsnntp-quit
+  input parameter session_ :: <newsnntp*>;
+  result res :: <C-signed-int>;
+  c-name: "newsnntp_quit";
+end;
+
+define C-function newsnntp-head
+  input parameter session_ :: <newsnntp*>;
+  input parameter indx_ :: <uint32-t>;
+  input parameter result_ :: <char**>;
+  input parameter result-len_ :: <size-t*>;
+  result res :: <C-signed-int>;
+  c-name: "newsnntp_head";
+end;
+
+define C-function newsnntp-head-free
+  input parameter str_ :: <char*>;
+  c-name: "newsnntp_head_free";
+end;
+
+define C-function newsnntp-article
+  input parameter session_ :: <newsnntp*>;
+  input parameter indx_ :: <uint32-t>;
+  input parameter result_ :: <char**>;
+  input parameter result-len_ :: <size-t*>;
+  result res :: <C-signed-int>;
+  c-name: "newsnntp_article";
+end;
+
+define C-function newsnntp-article-by-message-id
+  input parameter session_ :: <newsnntp*>;
+  input parameter msg-id_ :: <char*>;
+  input parameter result_ :: <char**>;
+  input parameter result-len_ :: <size-t*>;
+  result res :: <C-signed-int>;
+  c-name: "newsnntp_article_by_message_id";
+end;
+
+define C-function newsnntp-article-free
+  input parameter str_ :: <char*>;
+  c-name: "newsnntp_article_free";
+end;
+
+define C-function newsnntp-body
+  input parameter session_ :: <newsnntp*>;
+  input parameter indx_ :: <uint32-t>;
+  input parameter result_ :: <char**>;
+  input parameter result-len_ :: <size-t*>;
+  result res :: <C-signed-int>;
+  c-name: "newsnntp_body";
+end;
+
+define C-function newsnntp-body-free
+  input parameter str_ :: <char*>;
+  c-name: "newsnntp_body_free";
+end;
+
+define C-function newsnntp-mode-reader
+  input parameter session_ :: <newsnntp*>;
+  result res :: <C-signed-int>;
+  c-name: "newsnntp_mode_reader";
+end;
+
+define C-struct <tm>
+  slot tm$tm-sec :: <C-signed-int>;
+  slot tm$tm-min :: <C-signed-int>;
+  slot tm$tm-hour :: <C-signed-int>;
+  slot tm$tm-mday :: <C-signed-int>;
+  slot tm$tm-mon :: <C-signed-int>;
+  slot tm$tm-year :: <C-signed-int>;
+  slot tm$tm-wday :: <C-signed-int>;
+  slot tm$tm-yday :: <C-signed-int>;
+  slot tm$tm-isdst :: <C-signed-int>;
+  slot tm$tm-gmtoff :: <C-signed-long>;
+  slot tm$tm-zone :: <char*>;
+end;
+
+define C-pointer-type <tm*> => <tm>;
+define C-function newsnntp-date
+  input parameter session_ :: <newsnntp*>;
+  input parameter tm_ :: <tm*>;
+  result res :: <C-signed-int>;
+  c-name: "newsnntp_date";
+end;
+
+define C-function newsnntp-authinfo-username
+  input parameter session_ :: <newsnntp*>;
+  input parameter username_ :: <char*>;
+  result res :: <C-signed-int>;
+  c-name: "newsnntp_authinfo_username";
+end;
+
+define C-function newsnntp-authinfo-password
+  input parameter session_ :: <newsnntp*>;
+  input parameter password_ :: <char*>;
+  result res :: <C-signed-int>;
+  c-name: "newsnntp_authinfo_password";
+end;
+
+define C-function newsnntp-post
+  input parameter session_ :: <newsnntp*>;
+  input parameter message_ :: <char*>;
+  input parameter size_ :: <size-t>;
+  result res :: <C-signed-int>;
+  c-name: "newsnntp_post";
+end;
+
+define C-struct <newsnntp-group-info>
+  slot newsnntp_group_info$grp-name :: <char*>;
+  slot newsnntp_group_info$grp-first :: <C-unsigned-int>;
+  slot newsnntp_group_info$grp-last :: <C-unsigned-int>;
+  slot newsnntp_group_info$grp-count :: <C-unsigned-int>;
+  slot newsnntp_group_info$grp-type :: <C-signed-char>;
+end;
+
+define C-pointer-type <newsnntp-group-info*> => <newsnntp-group-info>;
+define C-pointer-type <newsnntp-group-info**> => <newsnntp-group-info*>;
+define C-function newsnntp-group
+  input parameter session_ :: <newsnntp*>;
+  input parameter groupname_ :: <char*>;
+  input parameter info_ :: <newsnntp-group-info**>;
+  result res :: <C-signed-int>;
+  c-name: "newsnntp_group";
+end;
+
+define C-function newsnntp-group-free
+  input parameter info_ :: <newsnntp-group-info*>;
+  c-name: "newsnntp_group_free";
+end;
+
+define C-function newsnntp-list
+  input parameter session_ :: <newsnntp*>;
+  input parameter result_ :: <clist**>;
+  result res :: <C-signed-int>;
+  c-name: "newsnntp_list";
+end;
+
+define C-function newsnntp-list-free
+  input parameter l_ :: <clist*>;
+  c-name: "newsnntp_list_free";
+end;
+
+define C-function newsnntp-list-overview-fmt
+  input parameter session_ :: <newsnntp*>;
+  input parameter result_ :: <clist**>;
+  result res :: <C-signed-int>;
+  c-name: "newsnntp_list_overview_fmt";
+end;
+
+define C-function newsnntp-list-overview-fmt-free
+  input parameter l_ :: <clist*>;
+  c-name: "newsnntp_list_overview_fmt_free";
+end;
+
+define C-function newsnntp-list-active
+  input parameter session_ :: <newsnntp*>;
+  input parameter wildmat_ :: <char*>;
+  input parameter result_ :: <clist**>;
+  result res :: <C-signed-int>;
+  c-name: "newsnntp_list_active";
+end;
+
+define C-function newsnntp-list-active-free
+  input parameter l_ :: <clist*>;
+  c-name: "newsnntp_list_active_free";
+end;
+
+define C-function newsnntp-list-active-times
+  input parameter session_ :: <newsnntp*>;
+  input parameter result_ :: <clist**>;
+  result res :: <C-signed-int>;
+  c-name: "newsnntp_list_active_times";
+end;
+
+define C-function newsnntp-list-active-times-free
+  input parameter l_ :: <clist*>;
+  c-name: "newsnntp_list_active_times_free";
+end;
+
+define C-function newsnntp-list-distribution
+  input parameter session_ :: <newsnntp*>;
+  input parameter result_ :: <clist**>;
+  result res :: <C-signed-int>;
+  c-name: "newsnntp_list_distribution";
+end;
+
+define C-function newsnntp-list-distribution-free
+  input parameter l_ :: <clist*>;
+  c-name: "newsnntp_list_distribution_free";
+end;
+
+define C-function newsnntp-list-distrib-pats
+  input parameter session_ :: <newsnntp*>;
+  input parameter result_ :: <clist**>;
+  result res :: <C-signed-int>;
+  c-name: "newsnntp_list_distrib_pats";
+end;
+
+define C-function newsnntp-list-distrib-pats-free
+  input parameter l_ :: <clist*>;
+  c-name: "newsnntp_list_distrib_pats_free";
+end;
+
+define C-function newsnntp-list-newsgroups
+  input parameter session_ :: <newsnntp*>;
+  input parameter pattern_ :: <char*>;
+  input parameter result_ :: <clist**>;
+  result res :: <C-signed-int>;
+  c-name: "newsnntp_list_newsgroups";
+end;
+
+define C-function newsnntp-list-newsgroups-free
+  input parameter l_ :: <clist*>;
+  c-name: "newsnntp_list_newsgroups_free";
+end;
+
+define C-function newsnntp-list-subscriptions
+  input parameter session_ :: <newsnntp*>;
+  input parameter result_ :: <clist**>;
+  result res :: <C-signed-int>;
+  c-name: "newsnntp_list_subscriptions";
+end;
+
+define C-function newsnntp-list-subscriptions-free
+  input parameter l_ :: <clist*>;
+  c-name: "newsnntp_list_subscriptions_free";
+end;
+
+define C-function newsnntp-listgroup
+  input parameter session_ :: <newsnntp*>;
+  input parameter group-name_ :: <char*>;
+  input parameter result_ :: <clist**>;
+  result res :: <C-signed-int>;
+  c-name: "newsnntp_listgroup";
+end;
+
+define C-function newsnntp-listgroup-free
+  input parameter l_ :: <clist*>;
+  c-name: "newsnntp_listgroup_free";
+end;
+
+define C-function newsnntp-xhdr-single
+  input parameter session_ :: <newsnntp*>;
+  input parameter header_ :: <char*>;
+  input parameter article_ :: <uint32-t>;
+  input parameter result_ :: <clist**>;
+  result res :: <C-signed-int>;
+  c-name: "newsnntp_xhdr_single";
+end;
+
+define C-function newsnntp-xhdr-range
+  input parameter session_ :: <newsnntp*>;
+  input parameter header_ :: <char*>;
+  input parameter rangeinf_ :: <uint32-t>;
+  input parameter rangesup_ :: <uint32-t>;
+  input parameter result_ :: <clist**>;
+  result res :: <C-signed-int>;
+  c-name: "newsnntp_xhdr_range";
+end;
+
+define C-function newsnntp-xhdr-free
+  input parameter l_ :: <clist*>;
+  c-name: "newsnntp_xhdr_free";
+end;
+
+define C-struct <newsnntp-xover-resp-item>
+  slot newsnntp_xover_resp_item$ovr-article :: <C-unsigned-int>;
+  slot newsnntp_xover_resp_item$ovr-subject :: <char*>;
+  slot newsnntp_xover_resp_item$ovr-author :: <char*>;
+  slot newsnntp_xover_resp_item$ovr-date :: <char*>;
+  slot newsnntp_xover_resp_item$ovr-message-id :: <char*>;
+  slot newsnntp_xover_resp_item$ovr-references :: <char*>;
+  slot newsnntp_xover_resp_item$ovr-size :: <C-unsigned-long>;
+  slot newsnntp_xover_resp_item$ovr-line-count :: <C-unsigned-int>;
+  slot newsnntp_xover_resp_item$ovr-others :: <clist*>;
+end;
+
+define C-pointer-type <newsnntp-xover-resp-item*> => <newsnntp-xover-resp-item>;
+define C-pointer-type <newsnntp-xover-resp-item**> => <newsnntp-xover-resp-item*>;
+define C-function newsnntp-xover-single
+  input parameter session_ :: <newsnntp*>;
+  input parameter article_ :: <uint32-t>;
+  input parameter result_ :: <newsnntp-xover-resp-item**>;
+  result res :: <C-signed-int>;
+  c-name: "newsnntp_xover_single";
+end;
+
+define C-function newsnntp-xover-range
+  input parameter session_ :: <newsnntp*>;
+  input parameter rangeinf_ :: <uint32-t>;
+  input parameter rangesup_ :: <uint32-t>;
+  input parameter result_ :: <clist**>;
+  result res :: <C-signed-int>;
+  c-name: "newsnntp_xover_range";
+end;
+
+define C-function xover-resp-item-free
+  input parameter n_ :: <newsnntp-xover-resp-item*>;
+  c-name: "xover_resp_item_free";
+end;
+
+define C-function newsnntp-xover-resp-list-free
+  input parameter l_ :: <clist*>;
+  c-name: "newsnntp_xover_resp_list_free";
+end;
+
+define C-function newsnntp-authinfo-generic
+  input parameter session_ :: <newsnntp*>;
+  input parameter authentificator_ :: <char*>;
+  input parameter arguments_ :: <char*>;
+  result res :: <C-signed-int>;
+  c-name: "newsnntp_authinfo_generic";
+end;
+
+define C-function newsnntp-socket-connect
+  input parameter f_ :: <newsnntp*>;
+  input parameter server_ :: <char*>;
+  input parameter port_ :: <uint16-t>;
+  result res :: <C-signed-int>;
+  c-name: "newsnntp_socket_connect";
+end;
+
+define C-function newsnntp-ssl-connect
+  input parameter f_ :: <newsnntp*>;
+  input parameter server_ :: <char*>;
+  input parameter port_ :: <uint16-t>;
+  result res :: <C-signed-int>;
+  c-name: "newsnntp_ssl_connect";
+end;
+
+define constant <callback> = <C-function-pointer>;
+define C-function newsnntp-ssl-connect-with-callback
+  input parameter f_ :: <newsnntp*>;
+  input parameter server_ :: <char*>;
+  input parameter port_ :: <uint16-t>;
+  input parameter callback_ :: <callback>;
+  input parameter data_ :: <C-void*>;
+  result res :: <C-signed-int>;
+  c-name: "newsnntp_ssl_connect_with_callback";
+end;
+
 define constant $MAIL-CHARCONV-NO-ERROR = 0;
 define constant $MAIL-CHARCONV-ERROR-UNKNOWN-CHARSET = 1;
 define constant $MAIL-CHARCONV-ERROR-MEMORY = 2;
@@ -1418,7 +3278,6 @@ define C-function carray-new
   c-name: "carray_new";
 end;
 
-define C-pointer-type <unsigned-int*> => <C-unsigned-int>;
 define C-function carray-add
   input parameter array_ :: <carray*>;
   input parameter data_ :: <C-void*>;
@@ -1486,31 +3345,8 @@ define C-function carray-free
   c-name: "carray_free";
 end;
 
-define C-struct <chashdatum>
-  slot chashdatum$data :: <C-void*>;
-  slot chashdatum$len :: <C-unsigned-int>;
-end;
-
-define C-pointer-type <chashcell*> => <chashcell>;
-define C-struct <chashcell>
-  slot chashcell$func :: <C-unsigned-int>;
-  slot chashcell$key :: <chashdatum>;
-  slot chashcell$value :: <chashdatum>;
-  slot chashcell$next :: <chashcell*>;
-end;
-
-define C-pointer-type <chashcell**> => <chashcell*>;
-define C-struct <chash>
-  slot chash$size :: <C-unsigned-int>;
-  slot chash$count :: <C-unsigned-int>;
-  slot chash$copyvalue :: <C-signed-int>;
-  slot chash$copykey :: <C-signed-int>;
-  slot chash$cells :: <chashcell**>;
-end;
-
 define constant <chashiter> = <chashcell>;
 
-define C-pointer-type <chash*> => <chash>;
 define C-function chash-new
   input parameter size_ :: <C-unsigned-int>;
   input parameter flags_ :: <C-signed-int>;
@@ -1637,10 +3473,10 @@ define C-function maillock-write-unlock
   c-name: "maillock_write_unlock";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x008CC038} "mbox-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00DB2E00} "mbox-message-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00DD2540} "mbox-cached-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00E0DC40} "mbox-cached-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00C5E4D0} "mbox-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00D361F8} "mbox-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00DC4540} "mbox-cached-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00EA9498} "mbox-cached-message-driver"*/
 define C-function mbox-mailstorage-init
   input parameter storage_ :: <mailstorage*>;
   input parameter mb-pathname_ :: <char*>;
@@ -1651,10 +3487,10 @@ define C-function mbox-mailstorage-init
   c-name: "mbox_mailstorage_init";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00E54AF0} "mh-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00DB2578} "mh-message-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00DD22D8} "mh-cached-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00E0DFC0} "mh-cached-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00B7A508} "mh-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00D89AF0} "mh-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00CA78F8} "mh-cached-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00E9A5E8} "mh-cached-message-driver"*/
 define C-function mh-mailstorage-init
   input parameter storage_ :: <mailstorage*>;
   input parameter mh-pathname_ :: <char*>;
@@ -1665,12 +3501,10 @@ define C-function mh-mailstorage-init
   c-name: "mh_mailstorage_init";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00DFF770} "imap-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00EACCB0} "imap-message-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x009C4310} "imap-cached-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00DD0A48} "imap-cached-message-driver"*/
-define constant <uint16-t> = <C-unsigned-short>;
-
+ /* Ignoring declaration for {<variable-declaration> #x00C5E000} "imap-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00D14D58} "imap-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00D15930} "imap-cached-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00D36508} "imap-cached-message-driver"*/
 define C-function imap-mailstorage-init
   input parameter storage_ :: <mailstorage*>;
   input parameter imap-servername_ :: <char*>;
@@ -1728,10 +3562,10 @@ define C-function imap-mailstorage-init-sasl-with-local-address
   c-name: "imap_mailstorage_init_sasl_with_local_address";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00E82D58} "pop3-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00CB8B28} "pop3-message-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00A358F8} "pop3-cached-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00A41540} "pop3-cached-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x008B5380} "pop3-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00A5C1C0} "pop3-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00B85A48} "pop3-cached-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00B86348} "pop3-cached-message-driver"*/
 define C-function pop3-mailstorage-init
   input parameter storage_ :: <mailstorage*>;
   input parameter pop3-servername_ :: <char*>;
@@ -1803,10 +3637,10 @@ define C-function hotmail-mailstorage-init
   c-name: "hotmail_mailstorage_init";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00EACB28} "nntp-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00EBDA48} "nntp-message-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x008A0380} "nntp-cached-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00A41F88} "nntp-cached-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00D36E00} "nntp-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00D896C8} "nntp-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00DA3188} "nntp-cached-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00DC5F18} "nntp-cached-message-driver"*/
 define C-function nntp-mailstorage-init
   input parameter storage_ :: <mailstorage*>;
   input parameter nntp-servername_ :: <char*>;
@@ -1841,10 +3675,10 @@ define C-function nntp-mailstorage-init-with-local-address
   c-name: "nntp_mailstorage_init_with_local_address";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00E9BAB8} "maildir-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00EAC5E8} "maildir-message-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x008A0AB8} "maildir-cached-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00A35540} "maildir-cached-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00B867E0} "maildir-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00C5ED58} "maildir-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00D14850} "maildir-cached-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00D36B60} "maildir-cached-message-driver"*/
 define C-function maildir-mailstorage-init
   input parameter storage_ :: <mailstorage*>;
   input parameter md-pathname_ :: <char*>;
@@ -1855,8 +3689,8 @@ define C-function maildir-mailstorage-init
   c-name: "maildir_mailstorage_init";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00EA01C0} "db-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00EA0888} "db-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00E81DC8} "db-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00E80508} "db-message-driver"*/
 define C-function db-mailstorage-init
   input parameter storage_ :: <mailstorage*>;
   input parameter db-pathname_ :: <char*>;
@@ -1864,8 +3698,8 @@ define C-function db-mailstorage-init
   c-name: "db_mailstorage_init";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00EA0150} "feed-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00EBCF50} "feed-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00DA17A8} "feed-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00CA79A0} "feed-message-driver"*/
 define C-function feed-mailstorage-init
   input parameter storage_ :: <mailstorage*>;
   input parameter feed-url_ :: <char*>;
@@ -1876,7 +3710,7 @@ define C-function feed-mailstorage-init
   c-name: "feed_mailstorage_init";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00A35310} "mime-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00D36428} "mime-message-driver"*/
 define C-function mime-message-init
   input parameter mime_ :: <mailmime*>;
   result res :: <mailmessage*>;
@@ -1895,7 +3729,7 @@ define C-function mime-message-set-tmpdir
   c-name: "mime_message_set_tmpdir";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00A420E0} "data-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00DA38F8} "data-message-driver"*/
 define C-function data-message-init
   input parameter data_ :: <char*>;
   input parameter len_ :: <size-t>;
@@ -2292,7 +4126,7 @@ define C-function libetpan-engine-debug
   c-name: "libetpan_engine_debug";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00E06000} "engine-app"*/
+ /* Ignoring declaration for {<variable-declaration> #x00D9C690} "engine-app"*/
 define C-function mailprivacy-gnupg-init
   input parameter privacy_ :: <mailprivacy*>;
   result res :: <C-signed-int>;
