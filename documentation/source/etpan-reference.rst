@@ -4,6 +4,273 @@ LibEtPan Reference
 The LibEtPan Module
 ===================
 
+Mail Message
+------------
+
+.. function:: mailmessage-new
+
+   :value new-message: a new empty message
+
+   :description:
+
+       This function will initializes a new empty message.
+
+.. function:: mailmessage-free
+
+   :param message: the message to free
+
+   :description:
+
+       This function will release the memory used by this message.
+
+.. function:: mailmessage-init
+
+   :param message-info: the message to initialize
+   :param session: the source session of the message. It can be NULL if the
+                   message does not get the information through the session.
+   :param driver: the driver to use for the message
+   :param index: the message number in the session. 0 can be given if the
+                 message is not attached to a session
+   :param size: is an optional parameter, 0 can be given. This is
+                informational, it's the size of the message content.
+    :value err: :const:`$MAIL_NO_ERROR` is returned on success,
+                ``$MAIL_ERROR_XXX`` is returned on error
+
+   :description:
+
+       This function will initializes a mailmessage structure
+       with a message from a given session.
+
+.. function:: mailmessage-flush
+
+   :param message-info: the message to clean
+   :value err: :const:`$MAIL_NO_ERROR` is returned on success,
+               ``$MAIL_ERROR_XXX`` is returned on error
+
+   :description:
+
+       This function will release all the temporary resources that are not
+       necessary to use the mailmessage structure from memory. These
+       resources are for example cached information, such as the MIME
+       structure.
+
+.. function:: mailmessage-check
+
+   :param message-info: the message to checkpoint
+   :value err: :const:`$MAIL_NO_ERROR` is returned on success,
+               ``$MAIL_ERROR_XXX`` is returned on error
+
+   :description:
+
+       This function will notify the new value of the flags to the session,
+       it must be called before mailsession_check_folder() in case the flags have
+       been changed.
+
+.. function:: mailmessage-fetch-result-free
+
+   :param message-info: the message from where the given buffer is from
+   :param msg: start of the buffer
+   :value err: :const:`$MAIL_NO_ERROR` is returned on success,
+               ``$MAIL_ERROR_XXX`` is returned on error
+
+   :description:
+
+       This function releases the memory used by a message returned
+       by any of the fetch function that returns a (char *).
+
+.. function:: mailmessage-fetch
+
+   :param message-info: the message from which we want to fetch information
+   :value err: :const:`$MAIL_NO_ERROR` is returned on success,
+               ``$MAIL_ERROR_XXX`` is returned on error
+   :value msg: the content of the message
+   :value msg-len: the length of the message
+
+   :description:
+
+       This function returns the content of the message (headers and text).
+
+.. function:: mailmessage-fetch-header
+
+   :param message-info: the message from which we want to fetch the header
+   :value err: :const:`$MAIL_NO_ERROR` is returned on success,
+               ``$MAIL_ERROR_XXX`` is returned on error
+   :value msg: the content of the header
+   :value msg-len: the length of the header
+
+   :description:
+
+       This function returns the header of the message as a string.
+
+.. function:: mailmessage-fetch-body
+
+   :param message-info: the message from which we want to fetch the body
+   :value err: :const:`$MAIL_NO_ERROR` is returned on success,
+               ``$MAIL_ERROR_XXX`` is returned on error
+   :value msg: the content of the body
+   :value msg-len: the length of the body
+
+   :description:
+
+       This function returns the header of the message as a string.
+
+.. function:: mailmessage-fetch-size
+
+   :param message-info: the message from which we want to fetch the content
+                        size
+   :value err: :const:`$MAIL_NO_ERROR` is returned on success,
+               ``$MAIL_ERROR_XXX`` is returned on error
+   :value size: the content size
+
+   :description:
+
+       This function returns the size of the message content.
+
+.. function:: mailmessage-get-bodystruct
+
+   :param message-info: the message from which we want to fetch information
+   :value err: :const:`$MAIL_NO_ERROR` is returned on success,
+               ``$MAIL_ERROR_XXX`` is returned on error
+   :value result: the MIME structure
+
+   :description:
+
+       This functions returns the MIME structure of the message.
+       The returned information MUST not be freed by hand. It is freed by
+       mailmessage_flush() or mailmessage_free().
+
+.. function:: mailmessage-fetch-section
+
+   :param message-info: the message from which we want to fetch information
+   :param mime: the MIME identifier
+   :value err: :const:`$MAIL_NO_ERROR` is returned on success,
+               ``$MAIL_ERROR_XXX`` is returned on error
+   :value result: the content of the specified MIME part
+   :value result-len: the length of the returned result
+
+   :description:
+
+       This function returns the content of a MIME part.
+
+.. function:: mailmessage-fetch-section-header
+
+   :param message-info: the message from which we want to fetch information
+   :param mime: the MIME identifier
+   :value err: :const:`$MAIL_NO_ERROR` is returned on success,
+               ``$MAIL_ERROR_XXX`` is returned on error
+   :value result: the header of the specified MIME part
+   :value result-len: the length of the returned result
+
+   :description:
+
+       This function returns the header of the message contained
+       in the given MIME part.
+
+.. function:: mailmessage-fetch-section-mime
+
+   :param message-info: the message from which we want to fetch information
+   :param mime: the MIME identifier
+   :value err: :const:`$MAIL_NO_ERROR` is returned on success,
+               ``$MAIL_ERROR_XXX`` is returned on error
+   :value result: the MIME header of the specified MIME part
+   :value result-len: the length of the returned result
+
+   :description:
+
+       This function returns the MIME header of the given MIME part.
+
+.. function:: mailmessage-fetch-section-body
+
+   :param message-info: the message from which we want to fetch information
+   :param mime: the MIME identifier
+   :value err: :const:`$MAIL_NO_ERROR` is returned on success,
+               ``$MAIL_ERROR_XXX`` is returned on error
+   :value result: the message text
+   :value result-len: the length of the returned result
+
+   :description:
+
+       This function returns the text part of the message contained
+       in the given MIME part.
+
+.. function:: mailmessage-fetch-envelope
+
+   :param message-info: the message from which we want to fetch information
+   :value err: :const:`$MAIL_NO_ERROR` is returned on success,
+               ``$MAIL_ERROR_XXX`` is returned on error
+   :value result: the headers list
+
+   :description:
+
+       This function returns a list of parsed fields of the message,
+       chosen by the driver.
+       The returned structure must be freed with mailimf-fields-free().
+
+.. function:: mailmessage-get-flags
+
+   :param message-info: the message from which we want to fetch information
+   :value err: :const:`$MAIL_NO_ERROR` is returned on success,
+               ``$MAIL_ERROR_XXX`` is returned on error
+   :value result: the flags
+
+   :description:
+
+       This function returns the flags related to the message.
+       The returned information MUST not be freed by hand. It is freed by
+       mailmessage-free().
+
+.. function:: mailmessage-resolve-single-fields
+
+   :param message-info: the message-info process
+   :value err: :const:`$MAIL_NO_ERROR` is returned on success,
+               ``$MAIL_ERROR_XXX`` is returned on error
+
+   :description:
+
+       This function will use the fields information to fill the single_fields
+       structure in the mailmessage structure.
+
+Mail Thread
+-----------
+
+.. function:: mail-build-thread
+
+   :param type: the type of threading to apply, the value can be
+                :const:`$MAIL_THREAD_REFERENCES`,
+                :const:`MAIL_THREAD_REFERENCES_NO_SUBJECT`,
+                :const:`MAIL_THREAD_ORDEREDSUBJECT` or
+                :const:`$MAIL_THREAD_NONE`
+   :param default-from: the default charset to use whenever the subject is not
+                        tagged with a charset. "US-ASCII" can be used if you
+                        don't know what to use
+   :param env-list: the message list to use to build the message tree
+   :param comp-function: the function to sort the messages. If NULL, no sorting
+                         algorithm is used
+   :value err: :const:`$MAIL_NO_ERROR` is returned on success,
+               ``$MAIL_ERROR_XXX`` is returned on error
+   :value tree: the resulting message tree
+
+   :description:
+
+       mail_build_thread constructs a tree with the message using the 
+       given style.
+
+.. function:: mail-thread-sort
+
+   :param tree: the message tree to sort
+   :param comp-function: the function to sort the messages.
+                         mailthread-tree-timecomp can be used for default
+                         sorting
+   :param sort-sub: if this value is 0, only the children of the root message
+                    are sorted
+   :value err: :const:`$MAIL_NO_ERROR` is returned on success,
+               ``$MAIL_ERROR_XXX`` is returned on error
+
+   :description:
+
+       mail_thread_sort sort the messages in the message tree, using the
+       given sort function.
+
 Mail Session
 ------------
 
