@@ -718,7 +718,6 @@ define module etpan
     $POP3DRIVER-SET-AUTH-TYPE,
     $TRUE,
     $USE-DEFLATE,
-    <C-string>,
     <FILE*>,
     <FILE>,
     <MMAPString*>,
@@ -4821,4 +4820,15 @@ define module etpan
     tm$tm-zone,
     tm$tm-zone-setter,
     xover-resp-item-free;
+
+  export
+    clist-isempty,
+    clist-count,
+    clist-begin,
+    clist-end,
+    clist-next,
+    clist-previous,
+    clist-content,
+    clist-prepend,
+    clist-append;
 end module;

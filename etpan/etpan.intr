@@ -173,3 +173,114 @@ define interface
     function "mailimap_fetch",
       output-argument: 4;
 end interface;
+
+// macros defined in clist.h
+// if you define NO_MACROS this is not needed, but some packaged versions of
+// libetpan don't do that. So we just write our own wrappers.
+define C-function clist-isempty
+  parameter list :: <clist*>;
+  result empty? :: <C-boolean>;
+  c-name: "etpan_clist_isempty";
+end C-function;
+
+define C-function clist-count
+  parameter list :: <clist*>;
+  result count :: <C-int>;
+  c-name: "etpan_clist_count";
+end C-function;
+
+define C-function clist-begin
+  parameter list :: <clist*>;
+  result first-cell :: <clistiter*>;
+  c-name: "etpan_clist_begin";
+end C-function;
+
+define C-function clist-end
+  parameter list :: <clist*>;
+  result last-cell :: <clistiter*>;
+  c-name: "etpan_clist_end";
+end C-function;
+
+define C-function clist-next
+  parameter iter :: <clistiter*>;
+  result next :: <clistiter*>;
+  c-name: "etpan_clist_next";
+end C-function;
+
+define C-function clist-previous
+  parameter iter :: <clistiter*>;
+  result previous :: <clistiter*>;
+  c-name: "etpan_clist_previous";
+end C-function;
+
+define C-function clist-content
+  parameter iter :: <clistiter*>;
+  result content :: <C-void*>;
+  c-name: "etpan_clist_content";
+end C-function;
+
+define C-function clist-prepend
+  parameter list :: <clist*>;
+  parameter data :: <C-void*>;
+  result res :: <C-int>;
+  c-name: "etpan_clist_prepend";
+end C-function;
+
+define C-function clist-append
+  parameter list :: <clist*>;
+  parameter data :: <C-void*>;
+  result res :: <C-int>;
+  c-name: "etpan_clist_append";
+end C-function;
+
+// clist as a <sequence>
+define method size (clist :: <clist*>)
+  clist-count(clist)
+end method size;
+
+define method shallow-copy (clist :: <clist*>)  => (copy :: <clist*>)
+  // TODO: implement this
+end method shallow-copy;
+
+define method element
+    (clist :: <clist*>, key :: <integer>,
+     #key default = $unsupplied)
+ => (element :: <object>)
+  if (key < size(clist))
+    let cell = clist-begin(clist) + key;
+    cell.clistcell_s$data
+  elseif (default = $unsupplied)
+    error("Attempt to access key %= which is outside of %=.", key,
+          clist)
+  else
+    default
+  end if
+end method element;
+
+define method forward-iteration-protocol
+    (clist :: <clist*>)
+ => (initial-state :: <integer>, limit :: <integer>,
+     next-state :: <function>, finished-state? :: <function>,
+     current-key :: <function>, current-element :: <function>,
+     current-element-setter :: <function>, copy-state :: <function>)
+  let initial-state = 0;
+  let limit = size(clist);
+  let next-state = method (list :: <clist*>, state :: <integer>)
+    state + 1
+  end method;
+  let finished-state? = method (list :: <clist*>, state :: <integer>)
+    state = limit
+  end method;
+  let current-key = method (list :: <clist*>, state :: <integer>)
+    state
+  end method;
+  let current-element = element;
+  let current-element-setter = element-setter;
+  let copy-state = identity;
+
+  values(
+    initial-state, limit,
+    next-state, finished-state?,
+    current-key, current-element,
+    current-element-setter, copy-state)
+end method forward-iteration-protocol;

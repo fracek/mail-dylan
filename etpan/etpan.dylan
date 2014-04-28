@@ -114,7 +114,7 @@ define C-struct <mailimap-extension-api>
   slot mailimap_extension_api$ext-free :: <ext-free>;
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00C33E38} "mailimap-extension-acl"*/
+ /* Ignoring declaration for {<variable-declaration> #x0088C1C0} "mailimap-extension-acl"*/
 define C-pointer-type <clistcell-s*> => <clistcell-s>;
 define C-struct <clistcell-s>
   slot clistcell_s$data :: <C-void*>;
@@ -388,7 +388,7 @@ define C-function mailimap-acl-free
   c-name: "mailimap_acl_free";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00C09D90} "mailimap-extension-annotatemore"*/
+ /* Ignoring declaration for {<variable-declaration> #x00CC2DC8} "mailimap-extension-annotatemore"*/
 define C-struct <mailimap-annotatemore-entry-match-list>
   slot mailimap_annotatemore_entry_match_list$entry-match-list :: <clist*>;
 end;
@@ -870,7 +870,7 @@ define C-function clist-nth
   c-name: "clist_nth";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00DC3E38} "mailimap-extension-condstore"*/
+ /* Ignoring declaration for {<variable-declaration> #x00E267A8} "mailimap-extension-condstore"*/
 define C-struct <mailimap-set>
   slot mailimap_set$set-list :: <clist*>;
 end;
@@ -1539,7 +1539,7 @@ define C-struct <mailmessage-driver>
 end;
 
 define C-pointer-type <mailmessage-driver*> => <mailmessage-driver>;
- /* Ignoring declaration for {<variable-declaration> #x00E82268} "data-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00A16E70} "data-message-driver"*/
 define C-function data-message-init
   input parameter data_ :: <C-string>;
   input parameter len_ :: <size-t>;
@@ -1552,8 +1552,8 @@ define C-function data-message-detach-mime
   c-name: "data_message_detach_mime";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00C39658} "db-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00C39D58} "db-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00EB1A48} "db-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00EAF118} "db-message-driver"*/
 define constant <char<@1024>> = <C-string>;
 define C-struct <mail-flags-store>
   slot mail_flags_store$fls-tab :: <carray*>;
@@ -1599,7 +1599,7 @@ define C-function db-mailstorage-init
   c-name: "db_mailstorage_init";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00E74A80} "mailimap-extension-enable"*/
+ /* Ignoring declaration for {<variable-declaration> #x00EB1C78} "mailimap-extension-enable"*/
 define C-pointer-type <mailimap-capability-data**> => <mailimap-capability-data*>;
 define C-function mailimap-enable
   input parameter session_ :: <mailimap*>;
@@ -1615,8 +1615,8 @@ define C-function mailimap-has-enable
   c-name: "mailimap_has_enable";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00CB87E0} "feed-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00A725B0} "feed-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00EB0A10} "feed-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00A937E0} "feed-message-driver"*/
 define C-struct <newsfeed>
   slot newsfeed$feed-url :: <C-string>;
   slot newsfeed$feed-title :: <C-string>;
@@ -1701,10 +1701,10 @@ define C-function mailimap-has-idle
   c-name: "mailimap_has_idle";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00E8BCB0} "imap-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00F48EA8} "imap-cached-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00F5F0E0} "imap-cached-message-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00FC4E38} "imap-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x008B9460} "imap-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x009A0230} "imap-cached-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x009BA888} "imap-cached-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00A16498} "imap-message-driver"*/
 define C-function imap-list-to-list
   input parameter imap-list_ :: <clist*>;
   input parameter result_ :: <mail-list**>;
@@ -2229,10 +2229,10 @@ define constant $MAILDIR-FLAG-TRASHED = 16;
 
 define constant $HOST-NAME-MAX = 255;
 
- /* Ignoring declaration for {<variable-declaration> #x00FDCE00} "maildir-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00A72770} "maildir-cached-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00A741C0} "maildir-cached-message-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00809508} "maildir-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00F31BD0} "maildir-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00FB7D58} "maildir-cached-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00FC6000} "maildir-cached-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00F51578} "maildir-message-driver"*/
 define C-struct <maildir-session-state-data>
   slot maildir_session_state_data$md-session :: <maildir*>;
   slot maildir_session_state_data$md-flags-store :: <mail-flags-store*>;
@@ -2973,7 +2973,7 @@ define C-function libetpan-engine-debug
   c-name: "libetpan_engine_debug";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00D6D700} "engine-app"*/
+ /* Ignoring declaration for {<variable-declaration> #x00E61578} "engine-app"*/
 define C-function mailfolder-noop
   input parameter folder_ :: <mailfolder*>;
   result res :: <C-signed-int>;
@@ -3572,7 +3572,7 @@ define C-function mailimap-login-simple
   c-name: "mailimap_login_simple";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00A725E8} "mailimap-extension-id"*/
+ /* Ignoring declaration for {<variable-declaration> #x009A0E38} "mailimap-extension-id"*/
 define C-function mailimap-has-id
   input parameter session_ :: <mailimap*>;
   result res :: <C-signed-int>;
@@ -3691,7 +3691,7 @@ define C-function mailimap-socket-starttls-with-callback
   c-name: "mailimap_socket_starttls_with_callback";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00FC4658} "mailimap-extension-sort"*/
+ /* Ignoring declaration for {<variable-declaration> #x00FD5118} "mailimap-extension-sort"*/
 define C-struct <mailimap-sort-key>
   slot mailimap_sort_key$sortk-type :: <C-signed-int>;
   slot mailimap_sort_key$sortk-is-reverse :: <C-signed-int>;
@@ -10433,7 +10433,7 @@ define C-function mailstream-set-privacy
   c-name: "mailstream_set_privacy";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00A755E8} "mailstream-debug"*/
+ /* Ignoring declaration for {<variable-declaration> #x00C7C188} "mailstream-debug"*/
 define C-function mailstream-logger
   input parameter direction_ :: <C-signed-int>;
   input parameter str_ :: <C-string>;
@@ -10499,9 +10499,9 @@ define C-struct <timeval>
   slot timeval$tv-usec :: <C-signed-int>;
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00943E70} "mailstream-network-delay"*/
- /* Ignoring declaration for {<variable-declaration> #x008EF8C0} "mailstream-cfstream-enabled"*/
- /* Ignoring declaration for {<variable-declaration> #x008EF888} "mailstream-cfstream-voip-enabled"*/
+ /* Ignoring declaration for {<variable-declaration> #x00CC6A10} "mailstream-network-delay"*/
+ /* Ignoring declaration for {<variable-declaration> #x00A749A0} "mailstream-cfstream-enabled"*/
+ /* Ignoring declaration for {<variable-declaration> #x00A74968} "mailstream-cfstream-voip-enabled"*/
 define constant $MAILSTREAM-CFSTREAM-SSL-ALLOWS-EXPIRED-CERTIFICATES = 1;
 define constant $MAILSTREAM-CFSTREAM-SSL-ALLOWS-EXPIRED-ROOTS = 2;
 define constant $MAILSTREAM-CFSTREAM-SSL-ALLOWS-ANY-ROOT = 4;
@@ -10514,7 +10514,7 @@ define constant $MAILSTREAM-CFSTREAM-SSL-LEVEL-SSLv3 = 2;
 define constant $MAILSTREAM-CFSTREAM-SSL-LEVEL-TLSv1 = 3;
 define constant $MAILSTREAM-CFSTREAM-SSL-LEVEL-NEGOCIATED-SSL = 4;
 
- /* Ignoring declaration for {<variable-declaration> #x008EF0E0} "mailstream-cfstream-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00A741C0} "mailstream-cfstream-driver"*/
 define constant <int16-t> = <C-signed-short>;
 
 define C-function mailstream-cfstream-open
@@ -10632,7 +10632,7 @@ define C-function mailstream-low-cfstream-wait-idle
   c-name: "mailstream_low_cfstream_wait_idle";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00F21B60} "mailstream-compress-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00FEF7E0} "mailstream-compress-driver"*/
 define C-struct <mailstream-compress-context>
 end;
 
@@ -10868,7 +10868,7 @@ define C-function mailstream-low-interrupt-idle
   c-name: "mailstream_low_interrupt_idle";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00BE9888} "mailstream-socket-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00C29AF0} "mailstream-socket-driver"*/
 define C-function mailstream-low-socket-open
   input parameter fd_ :: <C-signed-int>;
   result res :: <mailstream-low*>;
@@ -11101,10 +11101,10 @@ define constant $MAIL-THREAD-REFERENCES-NO-SUBJECT = 1;
 define constant $MAIL-THREAD-ORDEREDSUBJECT = 2;
 define constant $MAIL-THREAD-NONE = 3;
 
- /* Ignoring declaration for {<variable-declaration> #x00CAEEE0} "mbox-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00D44CB0} "mbox-cached-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x0105D7E0} "mbox-cached-message-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00CAE118} "mbox-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00D849D8} "mbox-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00F8D770} "mbox-cached-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x010FF2A0} "mbox-cached-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00FE8C08} "mbox-message-driver"*/
 define constant $MBOXDRIVER-SET-READ-ONLY = 1;
 define constant $MBOXDRIVER-SET-NO-UID = 2;
 
@@ -11144,10 +11144,10 @@ define C-function mbox-mailstorage-init
   c-name: "mbox_mailstorage_init";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x01089F50} "mh-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x010D49D8} "mh-cached-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x010DD888} "mh-cached-message-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x01089188} "mh-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00DECA10} "mh-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x010FF000} "mh-cached-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x01118118} "mh-cached-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x010FFE00} "mh-message-driver"*/
 define C-struct <mh-session-state-data>
   slot mh_session_state_data$mh-session :: <mailmh*>;
   slot mh_session_state_data$mh-cur-folder :: <mailmh-folder*>;
@@ -11182,7 +11182,7 @@ define C-function mh-mailstorage-init
   c-name: "mh_mailstorage_init";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00DB9D20} "mime-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x009BA000} "mime-message-driver"*/
 define C-function mime-message-init
   input parameter mime_ :: <mailmime*>;
   result res :: <mailmessage*>;
@@ -12161,10 +12161,10 @@ define C-struct <newsnntp-xhdr-resp-item>
   slot newsnntp_xhdr_resp_item$hdr-value :: <C-string>;
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00D6DF50} "nntp-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00D95AF0} "nntp-cached-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00D97BD0} "nntp-cached-message-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00D86930} "nntp-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00C20738} "nntp-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00CB6B98} "nntp-cached-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00D53AF0} "nntp-cached-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00C21700} "nntp-message-driver"*/
 define constant $NNTPDRIVER-SET-MAX-ARTICLES = 1;
 
 define C-struct <nntp-session-state-data>
@@ -12240,10 +12240,10 @@ define C-function nntp-mailstorage-init-with-local-address
   c-name: "nntp_mailstorage_init_with_local_address";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00FDC000} "pop3-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00A72E70} "pop3-cached-session-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00A74700} "pop3-cached-message-driver"*/
- /* Ignoring declaration for {<variable-declaration> #x00949A10} "pop3-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00FE8038} "pop3-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x009A0A10} "pop3-cached-session-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x009BAD90} "pop3-cached-message-driver"*/
+ /* Ignoring declaration for {<variable-declaration> #x00FEF230} "pop3-message-driver"*/
 define constant $POP3DRIVER-SET-AUTH-TYPE = 1;
 
 define constant $POP3DRIVER-AUTH-TYPE-PLAIN = 0;
@@ -12376,7 +12376,7 @@ define C-function pop3-mailstorage-init-sasl-with-local-address
   c-name: "pop3_mailstorage_init_sasl_with_local_address";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00F48968} "mailimap-extension-qresync"*/
+ /* Ignoring declaration for {<variable-declaration> #x00BE64D0} "mailimap-extension-qresync"*/
 define C-struct <mailimap-qresync-vanished>
   slot mailimap_qresync_vanished$qr-earlier :: <C-signed-int>;
   slot mailimap_qresync_vanished$qr-known-uids :: <mailimap-set*>;
@@ -12460,7 +12460,7 @@ define C-function mailimap-qresync-resptextcode-free
   c-name: "mailimap_qresync_resptextcode_free";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00C392D8} "mailimap-extension-uidplus"*/
+ /* Ignoring declaration for {<variable-declaration> #x00EB1380} "mailimap-extension-uidplus"*/
 define C-function mailimap-uid-expunge
   input parameter session_ :: <mailimap*>;
   input parameter set_ :: <mailimap-set*>;
@@ -12571,7 +12571,7 @@ define C-struct <mailimap-msg-att-xgmlabels>
   slot mailimap_msg_att_xgmlabels$att-labels :: <clist*>;
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00AD1EE0} "mailimap-extension-xgmlabels"*/
+ /* Ignoring declaration for {<variable-declaration> #x009ECB98} "mailimap-extension-xgmlabels"*/
 define C-function mailimap-fetch-att-new-xgmlabels
   result res :: <mailimap-fetch-att*>;
   c-name: "mailimap_fetch_att_new_xgmlabels";
@@ -12627,19 +12627,19 @@ define C-function mailimap-uid-store-xgmlabels
   c-name: "mailimap_uid_store_xgmlabels";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00BDB118} "mailimap-extension-xgmmsgid"*/
+ /* Ignoring declaration for {<variable-declaration> #x00A93968} "mailimap-extension-xgmmsgid"*/
 define C-function mailimap-fetch-att-new-xgmmsgid
   result res :: <mailimap-fetch-att*>;
   c-name: "mailimap_fetch_att_new_xgmmsgid";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00A740E0} "mailimap-extension-xgmthrid"*/
+ /* Ignoring declaration for {<variable-declaration> #x00BA0930} "mailimap-extension-xgmthrid"*/
 define C-function mailimap-fetch-att-new-xgmthrid
   result res :: <mailimap-fetch-att*>;
   c-name: "mailimap_fetch_att_new_xgmthrid";
 end;
 
- /* Ignoring declaration for {<variable-declaration> #x00AB8460} "mailimap-extension-xlist"*/
+ /* Ignoring declaration for {<variable-declaration> #x009B93F0} "mailimap-extension-xlist"*/
 define C-function mailimap-xlist
   input parameter session_ :: <mailimap*>;
   input parameter mb_ :: <C-string>;
@@ -12655,3 +12655,109 @@ define C-function mailimap-has-xlist
   c-name: "mailimap_has_xlist";
 end;
 
+define C-function clist-isempty
+  parameter list :: <clist*>;
+  result empty? :: <C-boolean>;
+  c-name: "etpan_clist_isempty";
+end C-function;
+
+define C-function clist-count
+  parameter list :: <clist*>;
+  result count :: <C-int>;
+  c-name: "etpan_clist_count";
+end C-function;
+
+define C-function clist-begin
+  parameter list :: <clist*>;
+  result first-cell :: <clistiter*>;
+  c-name: "etpan_clist_begin";
+end C-function;
+
+define C-function clist-end
+  parameter list :: <clist*>;
+  result last-cell :: <clistiter*>;
+  c-name: "etpan_clist_end";
+end C-function;
+
+define C-function clist-next
+  parameter iter :: <clistiter*>;
+  result next :: <clistiter*>;
+  c-name: "etpan_clist_next";
+end C-function;
+
+define C-function clist-previous
+  parameter iter :: <clistiter*>;
+  result previous :: <clistiter*>;
+  c-name: "etpan_clist_previous";
+end C-function;
+
+define C-function clist-content
+  parameter iter :: <clistiter*>;
+  result content :: <C-void*>;
+  c-name: "etpan_clist_content";
+end C-function;
+
+define C-function clist-prepend
+  parameter list :: <clist*>;
+  parameter data :: <C-void*>;
+  result res :: <C-int>;
+  c-name: "etpan_clist_prepend";
+end C-function;
+
+define C-function clist-append
+  parameter list :: <clist*>;
+  parameter data :: <C-void*>;
+  result res :: <C-int>;
+  c-name: "etpan_clist_append";
+end C-function;
+
+// clist as a <sequence>
+define method size (clist :: <clist*>)
+  clist-count(clist)
+end method size;
+
+define method shallow-copy (clist :: <clist*>)  => (copy :: <clist*>)
+  // TODO: implement this
+end method shallow-copy;
+
+define method element
+    (clist :: <clist*>, key :: <integer>,
+     #key default = $unsupplied)
+ => (element :: <object>)
+  if (key < size(clist))
+    let cell = clist-begin(clist) + key;
+    cell.clistcell_s$data
+  elseif (default = $unsupplied)
+    error("Attempt to access key %= which is outside of %=.", key,
+          clist)
+  else
+    default
+  end if
+end method element;
+
+define method forward-iteration-protocol
+    (clist :: <clist*>)
+ => (initial-state :: <integer>, limit :: <integer>,
+     next-state :: <function>, finished-state? :: <function>,
+     current-key :: <function>, current-element :: <function>,
+     current-element-setter :: <function>, copy-state :: <function>)
+  let initial-state = 0;
+  let limit = size(clist);
+  let next-state = method (list :: <clist*>, state :: <integer>)
+    state + 1
+  end method;
+  let finished-state? = method (list :: <clist*>, state :: <integer>)
+    state = limit
+  end method;
+  let current-key = method (list :: <clist*>, state :: <integer>)
+    state
+  end method;
+  let current-element = element;
+  let current-element-setter = element-setter;
+  let copy-state = identity;
+  values(
+    initial-state, limit,
+    next-state, finished-state?,
+    current-key, current-element,
+    current-element-setter, copy-state)
+end method forward-iteration-protocol;
