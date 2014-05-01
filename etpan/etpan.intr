@@ -170,6 +170,9 @@ define interface
       "chash_value"
     };
 
+    pointer "clist *" => <clist*>,
+      superclasses: {<sequence>};
+    
     function "mailimap_fetch",
       output-argument: 4;
 end interface;
@@ -239,16 +242,15 @@ define method size (clist :: <clist*>)
 end method size;
 
 define method shallow-copy (clist :: <clist*>)  => (copy :: <clist*>)
-  // TODO: implement this
+  error("Not implemented");
 end method shallow-copy;
 
 define method element
-    (clist :: <clist*>, key :: <integer>,
+    (clist :: <clist*>, key :: <clistiter*>,
      #key default = $unsupplied)
  => (element :: <object>)
-  if (key < size(clist))
-    let cell = clist-begin(clist) + key;
-    cell.clistcell_s$data
+  if (~null-pointer?(key))
+    clist-content(key)
   elseif (default = $unsupplied)
     error("Attempt to access key %= which is outside of %=.", key,
           clist)
@@ -257,21 +259,27 @@ define method element
   end if
 end method element;
 
+define method element-setter
+    (new-value :: <object>, clist :: <clist*>, key :: <integer>)
+ => (new-value :: <object>)
+  error("Attempt to assign key %= to %=.", key, clist)
+end method element-setter;
+
 define method forward-iteration-protocol
     (clist :: <clist*>)
- => (initial-state :: <integer>, limit :: <integer>,
+ => (initial-state :: <clistcell*>, limit :: <clistcell*>,
      next-state :: <function>, finished-state? :: <function>,
      current-key :: <function>, current-element :: <function>,
      current-element-setter :: <function>, copy-state :: <function>)
-  let initial-state = 0;
-  let limit = size(clist);
-  let next-state = method (list :: <clist*>, state :: <integer>)
-    state + 1
+  let initial-state = clist-begin(clist);
+  let limit = clist-end(clist);
+  let next-state = method (list :: <clist*>, state :: <clistiter*>)
+    clist-next(state)
   end method;
-  let finished-state? = method (list :: <clist*>, state :: <integer>)
-    state = limit
+  let finished-state? = method (list :: <clist*>, state :: <clistiter*>, limit :: <clistiter*>)
+    null-pointer?(state)
   end method;
-  let current-key = method (list :: <clist*>, state :: <integer>)
+  let current-key = method (list :: <clist*>, state :: <clistiter*>)
     state
   end method;
   let current-element = element;

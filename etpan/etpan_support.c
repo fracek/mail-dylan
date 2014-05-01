@@ -13,7 +13,7 @@ clistiter *etpan_clist_begin(clist *lst) {
 }
 
 clistiter *etpan_clist_end(clist *lst) {
-  return clist_begin(lst);
+  return clist_end(lst);
 }
 
 clistiter *etpan_clist_next(clistiter *iter) {
